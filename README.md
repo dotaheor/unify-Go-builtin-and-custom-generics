@@ -1,24 +1,27 @@
+
 # A solution to unify Go builtin and custom generics
 
 This (immature) solution is extended from
 [my many](https://gist.github.com/dotaheor/4b7496dba1939ce3f91a0f8cfccef927)
 old [(immature) ideas](https://gist.github.com/dotaheor/c805d221ed86265d6e8bb4f16a714060).
 
-Although the ideas in the folution are still immature for generic implementations,
+Although the ideas in the solution are still immature for generic implementations,
 I think they are really good to unify the appearances and explanations of generics.
 
-IMO, the solution has much better readibilities than the generic design in C++, Rust, Java, etc.
+In my opinion, the solution has much better readibilities than the generic design in C++, Rust, Java, etc.
 
 ### Overview of this solution
 
 Now, there are 5 kinds of code element declarations (except labels) in Go: `var`, `const`, `func`, `type`, and `import`.
 This solution adds a new one `gen`, which means a generic declaration.
 
+In the following examples, the generic input constraints are ignored.
+
 A generic declartion looks like
 
 
 ```
-gen GenName[in0 InputElementKind0, in1 InputElementKind1, ...] [out0 OutputElementKind0, out1 OutputElementKind1, ...] {
+gen GenName[in0 InputEleKind0, in1 InputEleKind1, ...] [out0 OutputEleKind0, out1 OutputEleKind1, ...] {
 	...
 }
 ```
@@ -66,7 +69,7 @@ Example 2 (single `type` output):
 gen List[T type] type {
 	type node struct {
 		Element T
-		Next    *list
+		Next    *node
 	}
 	
 	func (n *node) Push(e T) *node {...}
