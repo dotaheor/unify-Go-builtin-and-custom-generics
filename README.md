@@ -135,10 +135,10 @@ gen TreeMap[Key type] [gen] {
 
 // use it
 
-type TreeMap = TreeMap[string][int]
+type stringIntTreeMap = TreeMap[string][int]
 
 func main() {
-	var tm TreeMap
+	var tm stringIntTreeMap
 	tm.Put("Go", 2009)
 	...
 }
