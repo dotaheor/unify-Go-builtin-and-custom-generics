@@ -152,7 +152,7 @@ but each of them only uses one generic.
 
 For example, in the last example above, the generic use can be
 ```
-type TreeMap = TreeMap[string]int
+type stringIntTreeMap = TreeMap[string]int
 ```
 
 which is like the builtin `map` generic.
