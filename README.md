@@ -238,7 +238,7 @@ The literal representations of directional channel types are also builtin generi
 Operator generic delcations (use `+` as example):
 ```
 gen +[a?, b var] var {
-	export a+b
+	... // internal implementation
 }
 ```
 
