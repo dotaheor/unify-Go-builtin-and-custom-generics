@@ -100,7 +100,7 @@ Example 3 (a single `import` output):
 // declaration
 gen Example[] [import] {
 	type Bar struct{}
-	func Foo(T) {}
+	func Foo(Bar) {}
 	
 	export {
 		Bar,
