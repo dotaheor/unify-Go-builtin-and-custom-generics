@@ -287,7 +287,7 @@ and generics with outputs can also be viewed as (non-pure) contracts.
 
 The following is a re-written of the `SetViaStrings` generic function shown in the Go 2 draft.
 ```
-func gen SetViaStrings[To, From type] func {
+gen SetViaStrings[To, From type] func {
 	viaStrings[To, From] // call the contract (another generic)
 	
 	export func(s []From) []To {
