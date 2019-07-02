@@ -82,13 +82,13 @@ gen List[T type] type {
 // use it
 
 func main() {
-	var intList *List[int]
+	var intList List[int]
 	intList = intList.Push(123)
 	intList = intList.Push(456)
 	intList = intList.Push(789)
 	intList.Dump()
 	
-	var strList *List[string]
+	var strList List[string]
 	strList = intList.Push("abc")
 	strList = intList.Push("mno")
 	strList = intList.Push("xyz")
