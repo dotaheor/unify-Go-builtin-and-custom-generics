@@ -9,6 +9,7 @@ Although the ideas in the solution are still immature for generic implementation
 I think they are really good to unify the appearances and explanations of generics.
 
 In my opinion, the solution has much better readibilities than the generic design in C++, Rust, Java, etc.
+The biggest advantage of this proposal is the new introduced `gen` elements are much like our familiar `func` element, which makes the proposal very easy to understand.
 
 ### Overview of this solution
 
