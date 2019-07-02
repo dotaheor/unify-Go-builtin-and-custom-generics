@@ -245,16 +245,71 @@ gen +[Ta?, Tb type] func {
 
 Operation generics are also builtin generic privileges.
 
-### Considering contracts
 
-Contracts can be used in this propsoal, for example, the builtin map generic can be delcared as
+### Work with contracts
+
+The contract idea proposed in the [Go 2 draft](https://go.googlesource.com/proposal/+/master/design/go2draft-contracts.md)
+is a great idea. However, I think it can be improved.
+For example, there is a contract defined in the draft as
 ```
-gen map[Tkey type(conparable)] gen {
+contract viaStrings(t To, f From) {
+	var x string = f.String()
+	t.Set(string("")) // could also use t.Set(x)
+}
+```
+
+I think the values `t` and `f` shouldn't appear in the contract prototype.
+It would be better to define the contract as the following one:
+```
+contract viaStrings(To, From) {
+	var t To
+	var f From
+	var x string = f.String()
+	t.Set(string("")) // could also use t.Set(x)
+}
+```
+
+Further more, I think the `contract` keyword is unecessary.
+In fact, the above contract can be defined as no-outputs `gen` instead.
+```
+gen viaStrings(To, From type) {
+	func _() {
+		var t To
+		var f From
+		var x string = f.String()
+		t.Set(string("")) // could also use t.Set(x)
+	}
+}
+```
+
+Yes, no-outputs generics will be viewed as pure contracts,
+and generics with outputs can also be viewed as (non-pure) contracts.
+
+The following is a re-written of the `SetViaStrings` generic function shown in the Go 2 draft.
+```
+func gen SetViaStrings[To, From type] func {
+	viaStrings[To, From] // call the contract (another generic)
+	
+	export func(s []From) []To {
+		r := make([]To, len(s))
+		for i, v := range s {
+			r[i].Set(v.String())
+		}
+		return r
+	}
+}
+```
+
+Another example: the builtin map generic can be delcared as
+```
+gen map[Tkey type] gen {
+	comparable[Tkey]
+	
 	export gen[T type] type {
 		... // export a map type
 	}
 }
 ```
 
-where `conparable` a contract.
+where `comparable` a builtin contract.
 
