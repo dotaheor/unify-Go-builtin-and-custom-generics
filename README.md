@@ -243,3 +243,17 @@ gen +[Ta?, Tb type] func {
 ```
 
 Operation generics are also builtin generic privileges.
+
+### Considering contracts
+
+Contracts can be used in this propsoal, for example, the builtin map generic can be delcared as
+```
+gen map[Tkey type(conparable)] gen {
+	export gen[T type] type {
+		... // export a map type
+	}
+}
+```
+
+where `conparable` a contract.
+
