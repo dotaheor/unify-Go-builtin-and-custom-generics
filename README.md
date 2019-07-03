@@ -313,3 +313,7 @@ gen map[Tkey type] gen {
 
 where `comparable` a builtin contract (a builtin `gen`).
 
+### Remaining problems
+
+The above efforts don't unify the `new` and `make` builtin functions well.
+
