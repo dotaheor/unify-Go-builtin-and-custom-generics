@@ -311,5 +311,5 @@ gen map[Tkey type] gen {
 }
 ```
 
-where `comparable` a builtin contract.
+where `comparable` a builtin contract (a builtin `gen`).
 
