@@ -352,16 +352,27 @@ gen SetViaStrings[To, From type] func {
 
 Another example: the builtin map generic can be delcared as
 ```
-gen map[Tkey type] gen {
+gen TreeMap[Tkey type] gen {
 	comparable[Tkey]
 	
 	export gen[T type] type {
-		... // export a map type
+		... // export a tree map type
 	}
 }
 ```
 
 where `comparable` a builtin contract (a builtin `gen`).
+
+### What is the meaningfullness of calling a contract generic in another generic?
+
+For example, in the last example, the `TreeMap` calls the `comparable` generic.
+However, its only exported `gen` implementation might not require the `Tkey`
+type is comparable, which means, the TreeMap can support slice/func/map types
+as key types, however, this is temporarily prohibited for the `comparable` generic
+is called. Yes, this is exactly the meaningfullness of calling extra generics
+as contracts to add more constraints in a generic to accept less valid inputs
+than a generic implementation can actually support. This is because some supported
+types might not be tested fully or other reasons.
 
 ### Remaining problems
 
