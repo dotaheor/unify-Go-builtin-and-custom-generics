@@ -219,17 +219,53 @@ gen chan[dir? const] gen {
 	on absent(dir) {
 		export gen[T type] type {
 			... // export a bi-directional channel type
+		
+			type C struct {
+				...
+			}
+			
+			// An operator function
+			func (c C) <- (v T) {
+				// ... send a value v to channel c
+			}
+			
+			// Another operator function
+			func <- (c C) (v T) {
+				// ... receive a value from channel c
+			}
+			
+			export C
 		}
 	}
 	
 	on dir == true {
 		export gen[T type] type {
 			... // export a receive-only channel type
+		
+			type C struct {
+				...
+			}
+			
+			func <- (c C) (v T) {
+				// ... receive a value from channel c
+			}
+			
+			export C
 		}
 	}
 	
 	export gen[T type] type {
-		.../ export a send-only channel type
+		... // export a send-only channel type
+		
+		type C struct {
+			...
+		}
+		
+		func (c C) <- (v T) {
+			// ... send a value v to channel c
+		}
+		
+		export C
 	}
 }
 ```
@@ -240,11 +276,25 @@ Operator generic delcations (use `+` as example):
 ```
 gen +[Ta?, Tb type] func {
 	... // internal implementation
+	on kind(Tb) == string {
+		...
+	}
+	on kind(Tb) == int {
+		...
+	}
+	...
 }
 ```
 
-Operation generics are also builtin generic privileges.
+Operator generics are also builtin generic privileges.
 
+### The above shown operator generic and optional generic inputs might be not good ideas
+
+It might be better to split slice and array as two different generics by not using optional inputs.
+
+It might also be better to split the channel generic described above as three different generics: `chan`, `chan<-` and `<-chan`.
+
+And it might be best not to support operator generics.
 
 ### Work with contracts
 
