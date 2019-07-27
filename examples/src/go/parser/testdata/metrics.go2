@@ -1,0 +1,111 @@
+package metrics
+
+import "sync"
+
+gen Metric1[T type] type {
+    comparable[T] // apply an extra contract
+    
+    // The only exported type is used as the output of the generic.
+    // NOTE: the name the of declared type is not important,
+    //       as long as it is exported. 
+    type Metric struct {
+    	mu sync.Mutex
+    	m  map[T]int
+    }
+    
+    func (m *Metric) Add(v T) {
+	    m.mu.Lock()
+	    defer m.mu.Unlock()
+	    if m.m == nil {
+		    m.m = make(map[T]int)
+	    }
+	    m[v]++
+    }
+}
+
+gen cmp2[T1, T2 type] {
+	comparable[T1]
+	comparable[T2]
+}
+
+gen key2[T1, T2 type] type {
+    cmp2[T1, T2] // apply an extra contract
+    
+    // The only exported type is used as the output of the generic.
+    // NOTE: the name the of declared type is not important,
+    //       as long as it is exported. 
+    type Export struct {
+	    f1 T1
+	    f2 T2
+    }
+}
+
+gen Metric2[T1, T2 type] type {
+    cmp2[T1, T2] // apply an extra contract.
+	             // In fact, this call can be removed, for the following code
+	             // has made the requirement already.
+	
+    // The only exported type is used as the output of the generic.
+    // NOTE: the name the of declared type is not important,
+    //       as long as it is exported. 
+	type Metric struct {
+    	mu sync.Mutex
+    	m  map[key2[T1, T2]]int
+    }
+
+    func (m *Metric) Add(v1 T1, v2 T2) {
+	    m.mu.Lock()
+	    defer m.mu.Unlock()
+	    if m.m == nil {
+		    m.m = make(map[key2[T1, T2]]int)
+	    }
+	    m[key2(T1, T2){v1, v2}]++
+    }
+}
+
+gne cmp3[T1, T2, T3 type] {
+	comparable[T1]
+	comparable[T2]
+	comparable[T3]
+	
+}
+
+gen key3[T1, T2, T3 type] type {
+	cmp3[T1, T2, T3] // apply an extra contract
+    
+    // The only exported type is used as the output of the generic.
+    // NOTE: the name the of declared type is not important,
+    //       as long as it is exported. 
+    type Export struct {
+	    f1 T1
+	    f2 T2
+	    f3 T3
+	}
+}
+
+gen Metric3[T1, T2, T3 type] type {
+	cmp3[T1, T2, T3] // apply an extra contract.
+	                 // In fact, this call can be removed, for the following code
+	                 // has made the requirement already.
+	
+	type key = key3[T1, T2, T3] // must be unepxorted
+	
+    // The only exported type is used as the output of the generic.
+    // NOTE: the name the of declared type is not important,
+    //       as long as it is exported. 
+	type Metric struct {
+		mu sync.Mutex
+		m  map[key]int
+	}
+	
+	func (m *Metric) Add(v1 T1, v2 T2, v3 T3) {
+		m.mu.Lock()
+		defer m.mu.Unlock()
+		if m.m == nil {
+			m.m = make(map[key]int)
+		}
+		m[key{v1, v2, v3}]++
+	}
+}
+
+// Repeat for the maximum number of permitted arguments.

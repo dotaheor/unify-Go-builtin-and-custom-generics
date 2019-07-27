@@ -1,0 +1,49 @@
+package sort
+
+gen orderedSlice[Elem type] import { // orderableSlice is a better name
+	comparable[Elem] // apply an extra contract. comparable is a built gen (contract).
+	                 // In fact, this call can be removed, for the following code
+	                 // has made the requirement already.
+	
+	// For a gen which ouputs an import, all the exported types
+	// and functions declared in the gen body will be outputted,
+	// their exported names are just their declaration names.
+	//
+	// For this specified gen, one type (with 3 methods) and one
+	// funciton will be outputted together in a mini-pacakge.
+
+	type OrderedSlice = []Elem
+	func (s OrderedSlice) Len() int           { return len(s) }
+	func (s OrderedSlice) Less(i, j int) bool { return s[i] < s[j] }
+	func (s OrderedSlice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+	
+	func OrderedSlice(s []Elem) {
+		sort.Sort(OrderedSlice(s))
+	}
+}
+
+gen sliceFn(Elem type] import {
+	
+	// For a gen which ouputs an import, all the exported types
+	// and functions declared in the gen body will be outputted,
+	// their exported names are just their declaration names.
+	//
+	// For this specified gen, one type (with 3 methods) and one
+	// funciton will be outputted together in a mini-pacakge.
+
+	type SliceFn struct {
+		s []Elem
+		f func(Elem, Elem) bool
+	}
+	func (s SliceFn) Len() int           { return len(s.s) }
+	func (s SliceFn) Less(i, j int) bool { return s.f(s.s[i], s.s[j]) }
+	func (s SliceFn) Swap(i, j int)      { s.s[i], s.s[j] = s.s[j], s.s[i] }
+	
+	func SliceFn(s []Elem, f func(Elem, Elem) bool) {
+		Sort(SliceFn{s, f})
+	}
+}
+
+
+
+
