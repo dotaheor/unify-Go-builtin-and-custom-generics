@@ -385,6 +385,32 @@ gen GenName[in0 InputEleKind0, in1 InputEleKind1, ...] [out OutputEleKind] {
 }
 ```
 
+### Single output `gen` can be simplified
+
+For example,
+
+```
+gen identity[T type] func {
+	func Identity(x T) T {
+		return x
+	}
+}
+
+gen set[T type] type {
+	type Set map[T]struct{}
+}
+```
+
+can be simplifed as
+
+```
+gen identity[T type] func (x T) T {
+	return x
+}
+
+gen set[T type] map[T]struct{}
+```
+
 ### Remaining problems
 
 The above efforts don't unify the `new` and `make` builtin generic functions well.
