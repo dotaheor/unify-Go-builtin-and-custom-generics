@@ -385,7 +385,7 @@ gen GenName[in0 InputEleKind0, in1 InputEleKind1, ...] [out OutputEleKind] {
 }
 ```
 
-### Single output `gen` can be simplified
+### Some somple single output `gen` can be simplified
 
 For example,
 
