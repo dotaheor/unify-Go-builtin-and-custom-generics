@@ -379,6 +379,8 @@ looks-irrelevant contracts in a `gen` tightens the conditions of the `gen`.
 
 In fact, the `export` keyword is also not very essential. We can comply with the current Go conventions. If a `gen` only exports one `type` or `func` element, then there can only be exactly one type or function which is declared as exported (first letter is upper case) in the `gen` body. If a `gen` exports an `import`, then there can be multiple elements declared as exported.
 
+This design change requires that each `gen` has most one output. So types and functions hybrid outputs will be prohibited.
+
 ### Remaining problems
 
 The above efforts don't unify the `new` and `make` builtin generic functions well.
