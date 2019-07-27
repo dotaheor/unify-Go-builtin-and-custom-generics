@@ -372,7 +372,8 @@ as key types, however, this is temporarily prohibited for the `comparable` gener
 is called. Yes, this is exactly the meaningfullness of calling extra generics
 as contracts to add more constraints in a generic to accept less valid inputs
 than a generic implementation can actually support. This is because some supported
-types might not be tested fully or other reasons.
+types might not be tested fully or other reasons. In other words, callig some
+looks-irrelevant contracts in a `gen` tightens the conditions of the `gen`.
 
 ### The `export` keyword can be removed from this proposal
 
