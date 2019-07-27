@@ -14,19 +14,19 @@ gen Map[K, V type] import {
 	// * the Map type, which has 3 exported methods.
 	// * the Iterator type, which has one exported method.
 	
-    type Map struct {
-	    root    *node
-	    compare func(K, K) int
-    }
-    
-    type node struct {
-	    key         K
-	    val         V
-	    left, right *node
-    }
+	type Map struct {
+		root    *node
+		compare func(K, K) int
+	}
+
+	type node struct {
+		key         K
+		val         V
+		left, right *node
+	}
 
 	func New(compare func(K, K) int) *Map {
-		    return &Map{compare: compare}
+		return &Map{compare: compare}
 	}
 	
 	// find looks up key in the map, and returns either a pointer

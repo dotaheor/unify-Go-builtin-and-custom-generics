@@ -11,10 +11,10 @@ import "runtime"
 // This is a convenient way to exit a goroutine sending values when
 // the receiver stops reading them.
 gne Ranger[T type] func {
-    // The only exported function is used as the output of the generic.
-    // NOTE: the name the of declared function is not important,
-    //       as long as it is exported.
-    func Ranger(*Sender[T], *Receiver[T]) {
+	// The only exported function is used as the output of the generic.
+	// NOTE: the name the of declared function is not important,
+	//       as long as it is exported.
+	func Ranger(*Sender[T], *Receiver[T]) {
 		c := make(chan T)
 		d := make(chan bool)
 		s := &Sender[T]{values: c, done: d}
@@ -26,9 +26,9 @@ gne Ranger[T type] func {
 
 // A sender is used to send values to a Receiver.
 gen Sender[T type] type {
-    // The only exported type is used as the output of the generic.
-    // NOTE: the name the of declared type is not important,
-    //       as long as it is exported. 
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name the of declared type is not important,
+	//       as long as it is exported. 
 	type Sender struct {
 		values chan<- T
 		done <-chan bool
@@ -36,7 +36,7 @@ gen Sender[T type] type {
 	
 	// Send sends a value to the receiver. It returns whether any more
 	// values may be sent; if it returns false the value was not sent.
-	func (s *Senderstruct) Send(v T) bool {
+	func (s *Sender) Send(v T) bool {
 		select {
 		case s.values <- v:
 			return true
@@ -47,7 +47,7 @@ gen Sender[T type] type {
 	
 	// Close tells the receiver that no more values will arrive.
 	// After Close is called, the Sender may no longer be used.
-	func (s *Senderstruct) Close() {
+	func (s *Sender) Close() {
 		close(s.values)
 	}
 }
@@ -55,9 +55,9 @@ gen Sender[T type] type {
 	
 // A Receiver receives values from a Sender.
 gen Receiver[T type] type {
-    // The only exported type is used as the output of the generic.
-    // NOTE: the name the of declared type is not important,
-    //       as long as it is exported. 
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name the of declared type is not important,
+	//       as long as it is exported. 
 	type Receiver struct {
 		values <-chan T
 		done chan<- bool

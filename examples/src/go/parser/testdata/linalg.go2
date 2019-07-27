@@ -9,47 +9,47 @@ gen Numeric[T type] {
 }
 	
 gen DotProduct[T type] func {
-    Numeric[T] // apply an extra contract
-    
-    // The only exported function is used as the output of the generic.
-    // NOTE: the name the of declared function is not important,
-    //       as long as it is exported. 
-    func DotProduct(s1, s2 []T) T {
-	    if len(s1) != len(s2) {
-		    panic("DotProduct: slices of unequal length")
-	    }
-	    
-	    var r T
-	    for i := range s1 {
-		    r += s1[i] * s2[i]
-	    }
-	    return r
-    }
+	Numeric[T] // apply an extra contract
+
+	// The only exported function is used as the output of the generic.
+	// NOTE: the name the of declared function is not important,
+	//       as long as it is exported. 
+	func DotProduct(s1, s2 []T) T {
+		if len(s1) != len(s2) {
+			panic("DotProduct: slices of unequal length")
+		}
+
+		var r T
+		for i := range s1 {
+			r += s1[i] * s2[i]
+		}
+		return r
+	}
 }
 
 
 // NumericAbs matches numeric types with an Abs method.
 gen NumericAbs[T type] {
-    Numeric[T] // apply an extra contract
-    
-    var x T
-    var _ interface {
-        Abs() T
-    } = x
+	Numeric[T] // apply an extra contract
+
+	var x T
+	var _ interface {
+		Abs() T
+	} = x
 }
 	
 // AbsDifference computes the absolute value of the difference of
 // a and b, where the absolute value is determined by the Abs method.
 gen AbsDifference[T type] func {
-    NumericAbs[T] // apply an extra contract
-    
-    // The only exported function is used as the output of the generic.
-    // NOTE: the name the of declared function is not important,
-    //       as long as it is exported. 
-    func AbsDifference(a, b T) T {
-	    d := a - b
-	    return d.Abs()
-    }
+	NumericAbs[T] // apply an extra contract
+
+	// The only exported function is used as the output of the generic.
+	// NOTE: the name the of declared function is not important,
+	//       as long as it is exported. 
+	func AbsDifference(a, b T) T {
+		d := a - b
+		return d.Abs()
+	}
 }
 
 // OrderedNumeric matches numeric types that support the < operator.
@@ -63,62 +63,61 @@ gen OrderedNumeric[T type] {
 	
 // Complex matches the two complex types, which do not have a < operator.
 gen Complex[T type] {
-    var x T
-    var _ = real(x), imag(y)
+	var x T
+	var _ = real(x), imag(y)
 }
 	
 // OrderedAbs is a helper type that defines an Abs method for
 // ordered numeric types.
 gen OrderedAbs[T type] type {
-    OrderedNumeric[T] // apply an extra contract
-    
-    // The only exported type is used as the output of the generic.
-    // NOTE: the name the of declared type is not important,
-    //       as long as it is exported. 
-    type OrderedAbs T
+	OrderedNumeric[T] // apply an extra contract
 
-    func (a OrderedAbs) Abs() T {
-	    if a < 0 {
-		    return -a
-	    }
-	    return a
-    }
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name the of declared type is not important,
+	//       as long as it is exported. 
+	type OrderedAbs T
+
+	func (a OrderedAbs) Abs() T {
+		if a < 0 {
+			return -a
+		}
+		return a
+	}
 }
 
 // ComplexAbs is a helper type that defines an Abs method for
 // complex types.
 gen ComplexAbs[T type] type {
-    Complex[T] // apply an extra contract
+	Complex[T] // apply an extra contract
 	           // In fact, this call can be removed, for the following code
 	           // has made the requirement already.
-    
-    // The only exported type is used as the output of the generic.
-    // NOTE: the name the of declared type is not important,
-    //       as long as it is exported. 
-    type ComplexAbs T
-	
-    func (a ComplexAbs) Abs() T {
-	    r := float64(real(a))
-	    i := float64(imag(a))
-	    d := math.Sqrt(r * r + i * i)
-	    return T(complex(d, 0))
-    }
+
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name the of declared type is not important,
+	//       as long as it is exported. 
+	type ComplexAbs T
+
+	func (a ComplexAbs) Abs() T {
+		r := float64(real(a))
+		i := float64(imag(a))
+		d := math.Sqrt(r * r + i * i)
+		return T(complex(d, 0))
+	}
 }
 	
 gen OrderedAbsDifference[T type] func {
-    OrderedNumeric[T] // apply an extra contract
+	OrderedNumeric[T] // apply an extra contract
 
-    func OrderedAbsDifference(a, b T) T {
-	    return T(AbsDifference(OrderedAbs[T](a), OrderedAbs[T](b)))
-    }
-    
+	func OrderedAbsDifference(a, b T) T {
+		return T(AbsDifference(OrderedAbs[T](a), OrderedAbs[T](b)))
+	}
 }
 	
 gen ComplexAbsDifference[T type] {
-    Complex[T]
-    
-    func ComplexAbsDifference(a, b T) T {
+	Complex[T]
+
+	func ComplexAbsDifference(a, b T) T {
 		return T(AbsDifference(ComplexAbs[T](a), ComplexAbs[T](b)))
-    }
+	}
 }
 

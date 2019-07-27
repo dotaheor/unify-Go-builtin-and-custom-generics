@@ -6,7 +6,7 @@ package p
 gen C[T type] {
 	var x T
 	var _ interface {
-	    m()
+		m()
 	} = x
 }
 	
@@ -25,9 +25,9 @@ gen ( // ERROR
 // A contract specifies methods and types for each of the
 // type parameters it constrains.
 gen Stringer[T type] {
-    var x T
+	var x T
 	var _ interface {
-	    String() string
+		String() string
 	} = x
 }
 	
@@ -41,12 +41,12 @@ gen Sequence[T type] {
 gen G[Node, Edge type] {
 	var n Node
 	var _ interface {
-	    Edges() []Edge
+		Edges() []Edge
 	} = n
 	
 	var e Edge
 	var _ interface {
-	    Nodes() (from Node, to Node)
+		Nodes() (from Node, to Node)
 	} = e
 }
 
@@ -60,10 +60,10 @@ gen Graph [Node, Edge type] import {
 	// For this specified gen, one type and two functions will
 	// be outputted together in a mini-pacakge.
 
-    type Graph struct { /* ... */ }
-    
-    func New(nodes []Node) *Graph(Node, Edge) { panic("unimplemented") }
-    
-    func ShortestPath(from, to Node) []Edge { panic("unimplemented") }
+	type Graph struct { /* ... */ }
+
+	func New(nodes []Node) *Graph(Node, Edge) { panic("unimplemented") }
+
+	func ShortestPath(from, to Node) []Edge { panic("unimplemented") }
 }
 

@@ -1,8 +1,8 @@
 package set
 
 gen Set[Elem type] import {
-    comparable[Elem] // apply an extra contract
-	
+	comparable[Elem] // apply an extra contract
+
 	// For a gen which ouputs an import, all the exported types
 	// and functions declared in the gen body will be outputted,
 	// their exported names are just their declaration names.
@@ -10,30 +10,29 @@ gen Set[Elem type] import {
 	// For this specified gen, one type (with 5 methods) and one
 	// funciton will be outputted together in a mini-pacakge.
 
-    
-    type Set map[Elem]struct{}
-    func (s Set) Add(v Elem) {
-	    s[v] = struct{}{}
-    }
-    func (s Set) Delete(v Elem) {
-	    delete(s, v)
-    }
-    func (s Set) Contains(v Elem) bool {
-	    _, ok := s[v]
-	    return ok
-    }
-    func (s Set) Len() int {
-	    return len(s)
-    }
-    func (s Set) Iterate(f func(Elem)) {
-	    for v := range s {
-		    f(v)
-	    }
-    }
-    
-    func Make() Set {
-    	return make(Set)
-    }
+	type Set map[Elem]struct{}
+	func (s Set) Add(v Elem) {
+		s[v] = struct{}{}
+	}
+	func (s Set) Delete(v Elem) {
+		delete(s, v)
+	}
+	func (s Set) Contains(v Elem) bool {
+		_, ok := s[v]
+			return ok
+		}
+		func (s Set) Len() int {
+		return len(s)
+	}
+	func (s Set) Iterate(f func(Elem)) {
+		for v := range s {
+			f(v)
+		}
+	}
+
+	func Make() Set {
+		return make(Set)
+	}
 }
 	
 

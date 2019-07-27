@@ -1,22 +1,22 @@
 package p
 	
 gen List [E type] type {
-    // The only exported type is used as the output of the generic.
-    // NOTE: the name the of declared type is not important,
-    //       as long as it is exported. 
-    type List []E
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name the of declared type is not important,
+	//       as long as it is exported. 
+	type List []E
 }
 
 var _ list[byte] = []byte{}
 
 gen Tree [E type] type {
-    // The only exported type is used as the output of the generic.
-    // NOTE: the name the of declared type is not important,
-    //       as long as it is exported.
-    type Tree struct {
-        left, right *Tree
-        payload E
-    }
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name the of declared type is not important,
+	//       as long as it is exported.
+	type Tree struct {
+		left, right *Tree
+		payload     E
+	}
 }
 	
 var root1 Tree[int]
