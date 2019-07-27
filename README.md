@@ -374,6 +374,10 @@ as contracts to add more constraints in a generic to accept less valid inputs
 than a generic implementation can actually support. This is because some supported
 types might not be tested fully or other reasons.
 
+### The `export` keyword can be removed from this proposal
+
+In fact, the `export` keyword is also not very essential. We can comply with the current Go conventions. If a `gen` only exports one `type` or `func` element, then there can only be exactly one type or function which is declared as exported (first letter is upper case) in the `gen` body. If a `gen` exports an `import`, then there can be multiple elements declared as exported.
+
 ### Remaining problems
 
 The above efforts don't unify the `new` and `make` builtin generic functions well.
