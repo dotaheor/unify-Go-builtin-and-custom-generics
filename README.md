@@ -377,9 +377,13 @@ looks-irrelevant contracts in a `gen` tightens the conditions of the `gen`.
 
 ### The `export` keyword can be removed from this proposal
 
-In fact, the `export` keyword is also not very essential. We can comply with the current Go conventions. If a `gen` only exports one `type` or `func` element, then there can only be exactly one type or function which is declared as exported (first letter is upper case) in the `gen` body. If a `gen` exports an `import`, then there can be multiple elements declared as exported.
+In fact, the `export` keyword is also not very essential. We can comply with the current Go conventions. If a `gen` only exports one `type` or `func` element, then there can only be exactly one type or function which is declared as exported (first letter is upper case) in the `gen` body. If a `gen` exports an `import`, then there can be multiple elements declared as exported. A generic declartion will look like
 
-This design change requires that each `gen` has most one output. So types and functions hybrid outputs will be prohibited.
+```
+gen GenName[in0 InputEleKind0, in1 InputEleKind1, ...] [out OutputEleKind] {
+	...
+}
+```
 
 ### Remaining problems
 
