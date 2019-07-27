@@ -411,6 +411,16 @@ gen identity[T type] func (x T) T {
 gen set[T type] map[T]struct{}
 ```
 
+or (anonymous generics)
+
+```
+gen [T type] func identity (x T) T {
+	return x
+}
+
+gen [T type] type set map[T]struct{}
+```
+
 ### Remaining problems
 
 The above efforts don't unify the `new` and `make` builtin generic functions well.
