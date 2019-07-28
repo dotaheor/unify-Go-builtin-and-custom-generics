@@ -11,7 +11,7 @@ I think they are really good to unify the appearances and explanations of generi
 In my opinion, the solution has much better readibilities than the generic design in C++, Rust, Java, etc.
 The biggest advantage of this proposal is the new introduced `gen` elements are much like our familiar `func` element, which makes the proposal very easy to understand.
 
-### Overview of this solution
+## Overview of this solution
 
 Now, there are 5 kinds of code element declarations (except labels) in Go: `var`, `const`, `func`, `type`, and `import`.
 This solution adds a new one `gen`, which means a generic declaration.
@@ -31,9 +31,9 @@ The form is very like a function declaration.
 The difference is the parameters and results of a generic declaration are all code element kinds.
 In other words, the parameters and results of a generic declaration can be `var`, `const`, `func`, `type`, `import`, and `gen`.
 
-### Some simple custom generic examples
+## Some simple custom generic examples
 
-Exampe 1 (single `func` output):
+### Exampe 1 (single `func` output):
 ```
 // declaration
 gen ConvertSlice[SliceElement, NewElement type] [func] {
@@ -64,7 +64,23 @@ func main() {
 }
 ```
 
-Example 2 (single `type` output):
+Note, by (this change)[#the-export-keyword-can-be-removed-from-this-proposal] and 
+(this change)[#some-somple-single-output-gens-can-be-simplified],
+the above `gen` can also be declared as anonymous:
+```
+gen [SliceElement, NewElement type] func ConvertSlice  (x []SliceElement) []NewElement {
+	if x == nil {
+		return nil
+	}
+	y := make([]NewElement, 0, len(x))
+	for i := range x {
+		y = append(y, NewElement(x[i]))
+	}
+	return y
+}
+```
+
+### Example 2 (single `type` output):
 ```
 // declaration
 gen List[T type] type {
@@ -96,7 +112,7 @@ func main() {
 }
 ```
 
-Example 3 (a single `import` output):
+### Example 3 (a single `import` output):
 ```
 // declaration
 gen Example[] [import] {
@@ -119,7 +135,7 @@ func main() {
 }
 ```
 
-Example 4 (a single `gen` output):
+### Example 4 (a single `gen` output):
 ```
 // declaration
 gen TreeMap[Key type] [gen] {
@@ -149,7 +165,7 @@ We can call the `TreeMap` generic use case as a generic chain with two generics.
 The uses in the above three other examples can also be called as generic chain,
 but each of them only uses one generic.
 
-### If the last generic in a generic chain use has only one input, then the `[]` surrounding the argument can be omitted.
+## If the last generic in a generic chain use has only one input, then the `[]` surrounding the argument can be omitted.
 
 For example, in the last example above, the generic use can be
 ```
@@ -158,7 +174,7 @@ type stringIntTreeMap = TreeMap[string]int
 
 which is like the builtin `map` generic.
 
-### A generic input can be delcared as optional if the input is the only input of a geneirc.
+## A generic input can be delcared as optional if the input is the only input of a geneirc.
 
 For example, for the generic declared as
 ```
@@ -179,7 +195,7 @@ type X = Something[16]
 type Y = Something[]
 ```
 
-### How builtin generics are declared
+## How builtin generics are declared
 
 Please note, in this solution, builtin generics still have some privileges.
 The names of builtin generics can contain non-identifier letters,
@@ -288,7 +304,7 @@ gen +[Ta?, Tb type] func {
 
 Operator generics are also builtin generic privileges.
 
-### The above shown operator generic and optional generic inputs might be not good ideas
+## The above shown operator generic and optional generic inputs might be not good ideas
 
 It might be better to split slice and array as two different generics by not using optional inputs.
 
@@ -296,7 +312,7 @@ It might also be better to split the channel generic described above as three di
 
 And it might be best not to support operator generics.
 
-### Work with contracts
+## Work with contracts
 
 The contract idea proposed in the [Go 2 draft](https://go.googlesource.com/proposal/+/master/design/go2draft-contracts.md)
 is a great idea. However, I think it can be improved.
@@ -363,7 +379,7 @@ gen TreeMap[Tkey type] gen {
 
 where `comparable` a builtin contract (a builtin `gen`).
 
-### What is the meaningfullness of calling a contract generic in another generic?
+## What is the meaningfullness of calling a contract generic in another generic?
 
 For example, in the last example, the `TreeMap` calls the `comparable` generic.
 However, its only exported `gen` implementation might not require the `Tkey`
@@ -375,7 +391,7 @@ than a generic implementation can actually support. This is because some support
 types might not be tested fully or other reasons. In other words, callig some
 looks-irrelevant contracts in a `gen` tightens the conditions of the `gen`.
 
-### The `export` keyword can be removed from this proposal
+## The `export` keyword can be removed from this proposal
 
 In fact, the `export` keyword is also not very essential. We can comply with the current Go conventions. If a `gen` only exports one `type` or `func` element, then there can only be exactly one type or function which is declared as exported (first letter is upper case) in the `gen` body. If a `gen` exports an `import`, then there can be multiple elements declared as exported. A generic declartion will look like
 
@@ -385,8 +401,10 @@ gen GenName[in0 InputEleKind0, in1 InputEleKind1, ...] [out OutputEleKind] {
 }
 ```
 
-### Some somple single output `gen`s can be simplified
+## Some simple single output `gen` can be simplified
 
+If the single output is a type or a function,
+then we can simplify the `gen` declaration.
 For example,
 
 ```
@@ -411,17 +429,7 @@ gen identity[T type] func (x T) T {
 gen set[T type] map[T]struct{}
 ```
 
-or (anonymous generics)
-
-```
-gen [T type] func identity (x T) T {
-	return x
-}
-
-gen [T type] type set map[T]struct{}
-```
-
-### Remaining problems
+## Remaining problems
 
 The above efforts don't unify the `new` and `make` builtin generic functions well.
 
