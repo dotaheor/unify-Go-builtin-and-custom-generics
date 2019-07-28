@@ -1,6 +1,4 @@
 
-(The old revision which uses the `export` keyword is here ()[https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/51b200e5d0f959f8a0ae2110d52d528b9ad393a4/README.md]. The `export` keyword is removed from the latest revision of this proposal now.)
-
 # Generic is gen: super function - a solution to unify Go builtin and custom generics
 
 This (immature) solution is extended from
@@ -33,10 +31,10 @@ where each `ElemKind` can be any of `var`, `const`, `func`, `type`, `import`, an
 The number of the outputs of a `gen` decalration can be zero or one.
 If a `gen` has no outputs, then it is viewed as a pure contract.
 
-Note: (the old revison)[https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/51b200e5d0f959f8a0ae2110d52d528b9ad393a4/README.md] of this proposal permits multiple
-outputs, which is prohibited by the current version.
+Note: [the old revision](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/51b200e5d0f959f8a0ae2110d52d528b9ad393a4/README.md) of this proposal permits multiple
+outputs, which is prohibited by the current revision.
 
-From, the declaration, we can see that the `gen` declaration form is very like a function declaration.
+From the declaration, we can see that the `gen` declaration syntax form is very like a function declaration.
 The difference is the parameters and results of a generic declaration are all code element kinds,
 instead of value types.
 
@@ -78,8 +76,7 @@ func main() {
 }
 ```
 
-Note: by (this change)[#the-export-keyword-can-be-removed-from-this-proposal] and 
-(this change)[#some-simple-single-output-gens-can-be-simplified] mentioned below,
+Note: by using [the simplifed form](#some-simple-single-output-gens-can-be-simplified) mentioned below,
 the above `gen` can also be declared as:
 ```
 gen ConvertSlice[OldElement, NewElement type] func (x []OldElement) []NewElement {
@@ -195,8 +192,7 @@ We can call the `TreeMap` generic use case as a generic chain with two generics.
 The uses in the above three other examples can also be called as generic chain,
 but each of them only uses one generic.
 
-Note: by (this change)[#the-export-keyword-can-be-removed-from-this-proposal] and 
-(this change)[#some-simple-single-output-gens-can-be-simplified] mentioned below,
+Note: by using [the simplifed form](#some-simple-single-output-gens-can-be-simplified) mentioned below,
 the above `gen` can also be declared as:
 ```
 gen TreeMap[Key type] gen [Element type] type {
@@ -314,7 +310,7 @@ Generics with outputs can also be viewed as (non-pure) contracts.
 The following `gen` implies the above contract.
 ```
 gen SetViaStrings[To, From type] func {
-	export func(s []From) []To {
+	func Exported(s []From) []To {
 		r := make([]To, len(s))
 		for i, v := range s {
 			r[i].Set(string(v.String()))
@@ -329,7 +325,7 @@ Another example: the builtin map generic can be delcared as
 gen TreeMap[Tkey type] gen {
 	comparable[Tkey] // call another contract to tighten the requirements for Tkey
 	
-	export gen[T type] type {
+	gen TreeMap[T type] type {
 		... // export a tree map type
 	}
 }
@@ -349,7 +345,7 @@ than a generic implementation can actually support. This is because some support
 types might not be tested fully or other reasons. In other words, callig some
 looks-irrelevant contracts in a `gen` tightens the conditions of the `gen`.
 
-## Some simple single output `gen` can be simplified
+## Some simple single output `gen`s can be simplified
 
 If the single output is a type or a function,
 then we can simplify the `gen` declaration.
