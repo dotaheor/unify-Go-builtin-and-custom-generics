@@ -110,7 +110,7 @@ gen List[T type] type {
 	// can be declared here.
 	// ...
 	var x = 1
-	const N = 128
+	const n = 128
 	func f() {}
 	type t struct{}
 }
