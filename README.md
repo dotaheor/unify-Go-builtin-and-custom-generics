@@ -161,6 +161,10 @@ func main() {
 }
 ```
 
+BTW, here are two comparisons between this proposal and the latest official draft:
+1. Map: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/map.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map.go2).
+1. Set: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/set.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/set.go2).
+
 ### Example 4 (a `gen` output):
 ```
 // declaration
