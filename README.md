@@ -1,4 +1,6 @@
 
+(The old revision which uses the `export` keyword is here ()[https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/51b200e5d0f959f8a0ae2110d52d528b9ad393a4/README.md]. The `export` keyword is removed from the latest revision of this proposal now.)
+
 # Generic is gen: super function - a solution to unify Go builtin and custom generics
 
 This (immature) solution is extended from
@@ -20,24 +22,34 @@ In the following examples, the generic input constraints are ignored.
 
 A generic declartion looks like
 
-
 ```
-gen GenName[in0 InputEleKind0, in1 InputEleKind1, ...] [out0 OutputEleKind0, out1 OutputEleKind1, ...] {
+gen GenName[in0 InputElemKind0, in1 InputElemKind1, ...] [out OutputElemKind] {
 	...
 }
 ```
 
-The form is very like a function declaration.
-The difference is the parameters and results of a generic declaration are all code element kinds.
-In other words, the parameters and results of a generic declaration can be `var`, `const`, `func`, `type`, `import`, and `gen`.
+where each `ElemKind` can be any of `var`, `const`, `func`, `type`, `import`, and `gen`.
+(However, `var` inputs and outputs are almost never used for it is not much useful.)
+The number of the outputs of a `gen` decalration can be zero or one.
+If a `gen` has no outputs, then it is viewed as a pure contract.
+
+Note: (the old revison)[https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/51b200e5d0f959f8a0ae2110d52d528b9ad393a4/README.md] of this proposal permits multiple
+outputs, which is prohibited by the current version.
+
+From, the declaration, we can see that the `gen` declaration form is very like a function declaration.
+The difference is the parameters and results of a generic declaration are all code element kinds,
+instead of value types.
 
 ## Some simple custom generic examples
 
-### Exampe 1 (single `func` output):
+### Exampe 1 (a `func` output):
 ```
 // declaration
-gen ConvertSlice[SliceElement, NewElement type] [func] {
-	func Convert(x []SliceElement) []NewElement {
+gen ConvertSlice[OldElement, NewElement type] [func] {
+	// The only exported function is used as the output of the generic.
+	// NOTE: the name the of declared function is not important,
+	//       as long as it is exported.
+	func Convert(x []OldElement) []NewElement {
 		if x == nil {
 			return nil
 		}
@@ -48,7 +60,9 @@ gen ConvertSlice[SliceElement, NewElement type] [func] {
 		return y
 	}
 	
-	export Convert
+	// There can be more functions declared, but they must be all
+	// unexported, for this gen only allows one exported function.
+	func anotherUnexportedFunction() {}
 }
 
 // use it
@@ -64,11 +78,11 @@ func main() {
 }
 ```
 
-Note, by (this change)[#the-export-keyword-can-be-removed-from-this-proposal] and 
-(this change)[#some-somple-single-output-gens-can-be-simplified],
-the above `gen` can also be declared as anonymous:
+Note: by (this change)[#the-export-keyword-can-be-removed-from-this-proposal] and 
+(this change)[#some-simple-single-output-gens-can-be-simplified] mentioned below,
+the above `gen` can also be declared as:
 ```
-gen [SliceElement, NewElement type] func ConvertSlice  (x []SliceElement) []NewElement {
+gen ConvertSlice[OldElement, NewElement type] func (x []OldElement) []NewElement {
 	if x == nil {
 		return nil
 	}
@@ -80,19 +94,28 @@ gen [SliceElement, NewElement type] func ConvertSlice  (x []SliceElement) []NewE
 }
 ```
 
-### Example 2 (single `type` output):
+### Example 2 (a `type` output):
 ```
 // declaration
 gen List[T type] type {
-	type node struct {
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name the of declared type is not important,
+	//       as long as it is exported.
+	type ListNode struct {
 		Element T
-		Next    *node
+		Next    *ListNode
 	}
 	
-	func (n *node) Push(e T) *node {...}
-	func (n *node) Dump() {...}
+	func (n *ListNode) Push(e T) *ListNode {...}
+	func (n *ListNode) Dump() {...}
 	
-	export node
+	// Some other unexport variables/constants/types/functions
+	// can be declared here.
+	// ...
+	var x = 1
+	const N = 128
+	func f() {}
+	type t struct{}
 }
 
 // use it
@@ -112,22 +135,28 @@ func main() {
 }
 ```
 
-### Example 3 (a single `import` output):
+### Example 3 (an `import` output):
+
+If a `gen` outputs an `import`, we can think the `gen` outputs a mini-package.
+
 ```
 // declaration
 gen Example[] [import] {
+
+	// For a gen which ouputs an import, all the exported types
+	// and functions declared in the gen body will be outputted,
+	// their exported names are just their declaration names.
+	//
+	// For this specified gen, one type and one function will
+	// be outputted together in a mini-package.
+	
 	type Bar struct{}
 	func Foo(Bar) {}
-	
-	export {
-		Bar,
-		Foo,
-	}
 }
 
 // use it
 
-import alib = Example[]
+import alib = Example[] // we can use alib as an imported package
 
 func main() {
 	var v alib.Bar
@@ -135,18 +164,19 @@ func main() {
 }
 ```
 
-### Example 4 (a single `gen` output):
+### Example 4 (a `gen` output):
 ```
 // declaration
 gen TreeMap[Key type] [gen] {
-	export gen[Element type] type {
+	// The only exported gen is used as the output of the generic.
+	// NOTE: the name the of declared gen is not important,
+	//       as long as it is exported.
+	gen TreeMap[Element type] type {
 		type Tree struct {...}
 		func (t *Tree) Put(k Key, e Element) {...}
 		func (t *Tree) Get(k Key) Element {...}
 		func (t *Tree) Has(k Key) bool {...}
 		func (t *Tree) Delete(k Key)(Element, bool) {...}
-		
-		export Tree
 	}
 }
 
@@ -165,6 +195,19 @@ We can call the `TreeMap` generic use case as a generic chain with two generics.
 The uses in the above three other examples can also be called as generic chain,
 but each of them only uses one generic.
 
+Note: by (this change)[#the-export-keyword-can-be-removed-from-this-proposal] and 
+(this change)[#some-simple-single-output-gens-can-be-simplified] mentioned below,
+the above `gen` can also be declared as:
+```
+gen TreeMap[Key type] gen [Element type] type {
+	type Tree struct {...}
+	func (t *Tree) Put(k Key, e Element) {...}
+	func (t *Tree) Get(k Key) Element {...}
+	func (t *Tree) Has(k Key) bool {...}
+	func (t *Tree) Delete(k Key)(Element, bool) {...}
+}
+```
+
 ## If the last generic in a generic chain use has only one input, then the `[]` surrounding the argument can be omitted.
 
 For example, in the last example above, the generic use can be
@@ -173,27 +216,6 @@ type stringIntTreeMap = TreeMap[string]int
 ```
 
 which is like the builtin `map` generic.
-
-## A generic input can be delcared as optional if the input is the only input of a geneirc.
-
-For example, for the generic declared as
-```
-gen Something[N? const] [outT type] {
-	// a possible implementaion
-	on absent(N) {
-		...
-	} else {
-		...
-	}
-	...
-}
-```
-
-we can use it as
-```
-type X = Something[16]
-type Y = Something[]
-```
 
 ## How builtin generics are declared
 
@@ -205,25 +227,25 @@ The following shown builtin generic declarations are all "look-like", not "exact
 
 Builtin array and slice declaration:
 ```
-gen array[N? const] gen {
-	on absent(N) {
-		export gen[T type] type {
-			... // export a slice type
-		}
-	} 
-	
-	export gen[T type] type {
+gen array[N const] gen {
+	gen Array[T type] type {
+		... // export an array type
+	}
+}
+
+gen slice[] gen {
+	gen Slice[T type] type {
 		... // export an array type
 	}
 }
 ```
 
-In it uses, the generic identifier `array` must be absent. (This is a builtin generic privilege).
+In it uses, the generic identifier `array` and `slice` must be absent. (This is a builtin generic privilege).
 
 Builtin map declaration:
 ```
 gen map[Tkey type] gen {
-	export gen[T type] type {
+	gen Map[T type] type {
 		... // export a map type
 	}
 }
@@ -231,112 +253,51 @@ gen map[Tkey type] gen {
 
 Builtin channel declaration:
 ```
-gen chan[dir? const] gen {
-	on absent(dir) {
-		export gen[T type] type {
-			... // export a bi-directional channel type
-		
-			type C struct {
-				...
-			}
-			
-			// An operator function
-			func (c C) <- (v T) {
-				// ... send a value v to channel c
-			}
-			
-			// Another operator function
-			func <- (c C) (v T) {
-				// ... receive a value from channel c
-			}
-			
-			export C
-		}
+gen chan[T type] type {
+	type C struct {
+		...
 	}
 	
-	on dir == true {
-		export gen[T type] type {
-			... // export a receive-only channel type
-		
-			type C struct {
-				...
-			}
-			
-			func <- (c C) (v T) {
-				// ... receive a value from channel c
-			}
-			
-			export C
-		}
+	// An operator function
+	func (c C) <- (v T) {
+		// ... send a value v to channel c
 	}
 	
-	export gen[T type] type {
-		... // export a send-only channel type
-		
-		type C struct {
-			...
-		}
-		
-		func (c C) <- (v T) {
-			// ... send a value v to channel c
-		}
-		
-		export C
+	// Another operator function
+	func <- (c C) (v T) {
+		// ... receive a value from channel c
+	}
+}
+
+gen <-chan[T type] type {
+	type C struct {
+		...
+	}
+	
+	func <- (c C) (v T) {
+		// ... receive a value from channel c
+	}
+}
+
+gen chan<-[T type] type {
+	type C struct {
+		...
+	}
+	
+	func (c C) <- (v T) {
+		// ... send a value v to channel c
 	}
 }
 ```
 
 The literal representations of directional channel types are also builtin generic privileges.
 
-Operator generic delcations (use `+` as example):
-```
-gen +[Ta?, Tb type] func {
-	... // internal implementation
-	on kind(Tb) == string {
-		...
-	}
-	on kind(Tb) == int {
-		...
-	}
-	...
-}
-```
+Operator function generics are also builtin generic privileges.
 
-Operator generics are also builtin generic privileges.
+## `gen`s are also contracts
 
-## The above shown operator generic and optional generic inputs might be not good ideas
+For example, the following no-outputs `gen` acts as a pure contract.
 
-It might be better to split slice and array as two different generics by not using optional inputs.
-
-It might also be better to split the channel generic described above as three different generics: `chan`, `chan<-` and `<-chan`.
-
-And it might be best not to support operator generics.
-
-## Work with contracts
-
-The contract idea proposed in the [Go 2 draft](https://go.googlesource.com/proposal/+/master/design/go2draft-contracts.md)
-is a great idea. However, I think it can be improved.
-For example, there is a contract defined in the draft as
-```
-contract viaStrings(t To, f From) {
-	var x string = f.String()
-	t.Set(string("")) // could also use t.Set(x)
-}
-```
-
-I think the values `t` and `f` shouldn't appear in the contract prototype.
-It would be better to define the contract as the following one:
-```
-contract viaStrings(To, From) {
-	var t To
-	var f From
-	var x string = f.String()
-	t.Set(string("")) // could also use t.Set(x)
-}
-```
-
-Further more, I think the `contract` keyword is unecessary.
-In fact, the above contract can be defined as no-outputs `gen` instead.
 ```
 gen viaStrings(To, From type) {
 	func _() {
@@ -348,18 +309,15 @@ gen viaStrings(To, From type) {
 }
 ```
 
-Yes, no-outputs generics will be viewed as pure contracts,
-and generics with outputs can also be viewed as (non-pure) contracts.
+Generics with outputs can also be viewed as (non-pure) contracts.
 
-The following is a re-written of the `SetViaStrings` generic function shown in the Go 2 draft.
+The following `gen` implies the above contract.
 ```
 gen SetViaStrings[To, From type] func {
-	viaStrings[To, From] // call the contract (another generic)
-	
 	export func(s []From) []To {
 		r := make([]To, len(s))
 		for i, v := range s {
-			r[i].Set(v.String())
+			r[i].Set(string(v.String()))
 		}
 		return r
 	}
@@ -369,7 +327,7 @@ gen SetViaStrings[To, From type] func {
 Another example: the builtin map generic can be delcared as
 ```
 gen TreeMap[Tkey type] gen {
-	comparable[Tkey]
+	comparable[Tkey] // call another contract to tighten the requirements for Tkey
 	
 	export gen[T type] type {
 		... // export a tree map type
@@ -390,16 +348,6 @@ as contracts to add more constraints in a generic to accept less valid inputs
 than a generic implementation can actually support. This is because some supported
 types might not be tested fully or other reasons. In other words, callig some
 looks-irrelevant contracts in a `gen` tightens the conditions of the `gen`.
-
-## The `export` keyword can be removed from this proposal
-
-In fact, the `export` keyword is also not very essential. We can comply with the current Go conventions. If a `gen` only exports one `type` or `func` element, then there can only be exactly one type or function which is declared as exported (first letter is upper case) in the `gen` body. If a `gen` exports an `import`, then there can be multiple elements declared as exported. A generic declartion will look like
-
-```
-gen GenName[in0 InputEleKind0, in1 InputEleKind1, ...] [out OutputEleKind] {
-	...
-}
-```
 
 ## Some simple single output `gen` can be simplified
 
@@ -432,4 +380,33 @@ gen set[T type] map[T]struct{}
 ## Remaining problems
 
 The above efforts don't unify the `new` and `make` builtin generic functions well.
+
+A new generic must be declared (by using the just mentioned simplifed form above) and used as
+```
+gen new[T type] func() *T {
+	var x T
+	return &x
+}
+
+// use it:
+
+var x = new[string]() // different from Go 1
+```
+
+and make:
+
+```
+gen make[T type] func {
+	sameKind[T, []T] || sameKind[T, map[int]T] // sameKind is a builtin contract
+	
+	func Make(params ...int) {
+		// ....
+	}
+}
+
+// use it:
+
+var m = new[map[int]string]() // different from Go 1
+var s = new[[]int](100)       // different from Go 1
+```
 

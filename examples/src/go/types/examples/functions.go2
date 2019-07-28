@@ -15,6 +15,24 @@ gen Reverse (T type) func {
 	}
 }
 
+/*
+Note: by the following changes to the proposal:
+* Some simple single output gens can be simplified
+  https://github.com/dotaheor/unify-Go-builtin-and-custom-generics#some-somple-single-output-gens-can-be-simplified
+
+the abvoe gen can also be declared as
+
+gen Reverse (T type) func (list []T) {
+	i := 0
+	j := len(list)-1
+	for i < j {
+		list[i], list[j] = list[j], list[i]
+		i++
+		j--
+	}
+}
+*/
+
 func _() {
 	Reverse[int](nil)
 	Reverse[string]([]string{"foo", "bar"})

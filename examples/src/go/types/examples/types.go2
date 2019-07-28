@@ -7,6 +7,16 @@ gen List [E type] type {
 	type List []E
 }
 
+/*
+Note: by the following changes to the proposal:
+* Some simple single output gens can be simplified
+  https://github.com/dotaheor/unify-Go-builtin-and-custom-generics#some-somple-single-output-gens-can-be-simplified
+
+the abvoe gen can also be declared as
+
+gen List [E type] []E
+*/
+
 var _ list[byte] = []byte{}
 
 gen Tree [E type] type {
@@ -18,6 +28,19 @@ gen Tree [E type] type {
 		payload     E
 	}
 }
+
+/*
+Note: by the following changes to the proposal:
+* Some simple single output gens can be simplified
+  https://github.com/dotaheor/unify-Go-builtin-and-custom-generics#some-somple-single-output-gens-can-be-simplified
+
+the abvoe gen can also be declared as
+
+gen Tree [E type] struct {
+	left, right *Tree
+	payload     E
+}
+*/
 	
 var root1 Tree[int]
 

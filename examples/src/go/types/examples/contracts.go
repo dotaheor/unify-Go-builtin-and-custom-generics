@@ -58,7 +58,7 @@ gen Graph [Node, Edge type] import {
 	// their exported names are just their declaration names.
 	//
 	// For this specified gen, one type and two functions will
-	// be outputted together in a mini-pacakge.
+	// be outputted together in a mini-package.
 
 	type Graph struct { /* ... */ }
 
