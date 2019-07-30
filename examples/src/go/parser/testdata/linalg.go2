@@ -12,7 +12,7 @@ gen DotProduct[T type] func {
 	Numeric[T] // apply an extra contract
 
 	// The only exported function is used as the output of the generic.
-	// NOTE: the name the of declared function is not important,
+	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported. 
 	func DotProduct(s1, s2 []T) T {
 		if len(s1) != len(s2) {
@@ -44,7 +44,7 @@ gen AbsDifference[T type] func {
 	NumericAbs[T] // apply an extra contract
 
 	// The only exported function is used as the output of the generic.
-	// NOTE: the name the of declared function is not important,
+	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported. 
 	func AbsDifference(a, b T) T {
 		d := a - b
@@ -73,7 +73,7 @@ gen OrderedAbs[T type] type {
 	OrderedNumeric[T] // apply an extra contract
 
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type OrderedAbs T
 
@@ -93,7 +93,7 @@ gen ComplexAbs[T type] type {
 	           // has made the requirement already.
 
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type ComplexAbs T
 

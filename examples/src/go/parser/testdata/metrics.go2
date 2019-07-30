@@ -6,7 +6,7 @@ gen Metric1[T type] type {
 	comparable[T] // apply an extra contract
 
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type Metric struct {
 		mu sync.Mutex
@@ -32,7 +32,7 @@ gen key2[T1, T2 type] type {
 	cmp2[T1, T2] // apply an extra contract
 
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type Export struct {
 		f1 T1
@@ -45,21 +45,23 @@ gen Metric2[T1, T2 type] type {
 	             // In fact, this call can be removed, for the following code
 	             // has made the requirement already.
 	
+	type tkey = key2[T1, T2] // must be unexported
+	
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the the name of declared type is not important,
 	//       as long as it is exported. 
 	type Metric struct {
 		mu sync.Mutex
-		m  map[key2[T1, T2]]int
+		m  map[tkey]int
 	}
 
 	func (m *Metric) Add(v1 T1, v2 T2) {
 		m.mu.Lock()
 		defer m.mu.Unlock()
 		if m.m == nil {
-			m.m = make(map[key2[T1, T2]]int)
+			m.m = make(map[tkey]int)
 		}
-		m[key2(T1, T2){v1, v2}]++
+		m[tkey{v1, v2}]++
 	}
 }
 
@@ -74,7 +76,7 @@ gen key3[T1, T2, T3 type] type {
 	cmp3[T1, T2, T3] // apply an extra contract
     
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type Export struct {
 		f1 T1
@@ -91,7 +93,7 @@ gen Metric3[T1, T2, T3 type] type {
 	type key = key3[T1, T2, T3] // must be unepxorted
 	
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type Metric struct {
 		mu sync.Mutex

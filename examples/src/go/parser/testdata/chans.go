@@ -12,7 +12,7 @@ import "runtime"
 // the receiver stops reading them.
 gne Ranger[T type] func {
 	// The only exported function is used as the output of the generic.
-	// NOTE: the name the of declared function is not important,
+	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
 	func Ranger(*Sender[T], *Receiver[T]) {
 		c := make(chan T)
@@ -27,7 +27,7 @@ gne Ranger[T type] func {
 // A sender is used to send values to a Receiver.
 gen Sender[T type] type {
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type Sender struct {
 		values chan<- T
@@ -56,7 +56,7 @@ gen Sender[T type] type {
 // A Receiver receives values from a Sender.
 gen Receiver[T type] type {
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type Receiver struct {
 		values <-chan T
@@ -71,7 +71,7 @@ gen Receiver[T type] type {
 		return v, ok
 	}
 	
-	// finalize is a finalizer for the receiver.
+	// Finalize is a finalizer for the receiver.
 	func (r *Receiver) Finalize() {
 		close(r.done)
 	}

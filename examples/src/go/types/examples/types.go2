@@ -2,7 +2,7 @@ package p
 	
 gen List [E type] type {
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported. 
 	type List []E
 }
@@ -21,7 +21,7 @@ var _ list[byte] = []byte{}
 
 gen Tree [E type] type {
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported.
 	type Tree struct {
 		left, right *Tree
@@ -34,7 +34,7 @@ Note: by the following changes to the proposal:
 * Some simple single output gens can be simplified
   https://github.com/dotaheor/unify-Go-builtin-and-custom-generics#some-somple-single-output-gens-can-be-simplified
 
-the abvoe gen can also be declared as
+the above gen can also be declared as
 
 gen Tree [E type] struct {
 	left, right *Tree

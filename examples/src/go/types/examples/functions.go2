@@ -2,7 +2,7 @@ package p
 
 gen Reverse (T type) func {
 	// The only exported function is used as the output of the generic.
-	// NOTE: the name the of declared function is not important,
+	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
 	func Reverse (list []T) {
 		i := 0
@@ -60,7 +60,7 @@ gen new [T type] func {
 	}
 
 	// The only exported function is used as the output of the generic.
-	// NOTE: the name the of declared function is not important,
+	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
 	//       Here it must be an exported identifer.
 	func New() *T {
@@ -81,7 +81,7 @@ var _ *float64 = new[float64]() // the result type is indeed *float64
 // A function may have multiple type parameters, of course.
 gen foo [A, B, C type] func {
 	// The only exported function is used as the output of the generic.
-	// NOTE: the name the of declared function is not important,
+	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
 	func Foo(a A, b []B, c *C) B {
 		// do something here
@@ -100,7 +100,7 @@ var _ float64 = foo(42, []float64{1.0}, &s)
 // for variadic functions.
 gen variadic[A, B type] func {
     // The only exported function is used as the output of the generic.
-    // NOTE: the name the of declared function is not important,
+    // NOTE: the name of the declared function is not important,
     //       as long as it is exported.
     func Exported (A, B, ...B) int { panic("unimplemented") }
 }

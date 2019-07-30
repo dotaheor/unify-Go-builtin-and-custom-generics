@@ -45,7 +45,7 @@ instead of value types.
 // declaration
 gen ConvertSlice[OldElement, NewElement type] [func] {
 	// The only exported function is used as the output of the generic.
-	// NOTE: the name the of declared function is not important,
+	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
 	func Convert(x []OldElement) []NewElement {
 		if x == nil {
@@ -96,7 +96,7 @@ gen ConvertSlice[OldElement, NewElement type] func (x []OldElement) []NewElement
 // declaration
 gen List[T type] type {
 	// The only exported type is used as the output of the generic.
-	// NOTE: the name the of declared type is not important,
+	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported.
 	type ListNode struct {
 		Element T
@@ -170,7 +170,7 @@ BTW, here are two comparisons between this proposal and the latest official draf
 // declaration
 gen TreeMap[Key type] [gen] {
 	// The only exported gen is used as the output of the generic.
-	// NOTE: the name the of declared gen is not important,
+	// NOTE: the name of the declared gen is not important,
 	//       as long as it is exported.
 	gen TreeMap[Element type] type {
 		type Tree struct {...}
