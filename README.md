@@ -1,5 +1,5 @@
 
-# Generic is gen: super function - a solution to unify Go builtin and custom generics
+# Generic is gen: mini-package - a solution to unify Go builtin and custom generics
 
 This (immature) solution is extended from
 [my many](https://gist.github.com/dotaheor/4b7496dba1939ce3f91a0f8cfccef927)
