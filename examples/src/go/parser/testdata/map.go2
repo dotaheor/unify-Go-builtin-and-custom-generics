@@ -1,19 +1,51 @@
 package orderedmap
 	
 import "chans"
-	
-gen Map[K, V type] import {
-	
-	// For a gen which ouputs an import, all the exported types
-	// and functions declared in the gen body will be outputted,
-	// their exported names are just their declaration names.
+
+
+gen keyValue[K, V type] type {
+
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name of the declared type is not important,
+	//       as long as it is exported.
+	type KeyValue struct {
+		key K
+		val V
+	}
+}
+
+gen Iterator[K, V type] type {
+
+
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name of the declared type is not important,
+	//       as long as it is exported.
 	//
-	// For this specified gen, two types and one function will
-	// be outputted together in a mini-pacakge.
-	// * the New function.
-	// * the Map type, which has four exported methods.
-	// * the Iterator type, which has one exported method.
+	// Iterator is used to iterate over the map.
+	type Iterator struct {
+		r *chans.Receiver[keyValue[K, V]]
+	}
 	
+	// Next returns the next key and value pair, and a boolean indicating
+	// whether they are valid or whether we have reached the end.
+	func (it *Iterator) Next() (K, V, bool) {
+		keyval, ok := it.r.Next()
+		if !ok {
+			var zerok K
+			var zerov V
+			return zerok, zerov, false
+		}
+		
+		return keyval.key, keyval.val, true
+	}
+}
+
+	
+gen Map[K, V type] type {
+	
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name of the declared type is not important,
+	//       as long as it is exported.
 	type Map struct {
 		root    *node
 		compare func(K, K) int
@@ -71,16 +103,10 @@ gen Map[K, V type] import {
 		}
 		return (*pn).val, true
 	}
-
-	// keyValue is a pair of key and value used when iterating.
-	type keyValue struct {
-		key K
-		val V
-	}
 	
 	// InOrder returns an iterator that does an in-order traversal of the map.
-	func (m *Map) InOrder() *Iterator() {
-		sender, receiver := chans.Ranger(keyValue)()
+	func (m *Map) InOrder() *Iterator[K, V] {
+		sender, receiver := chans.Ranger[keyValue[K, V]]()
 		var f func(*node) bool
 		f = func(n *node) bool {
 			if n == nil {
@@ -91,7 +117,7 @@ gen Map[K, V type] import {
 			// meaning that nothing is listening at the receiver end.
 			return f(n.left) &&
 		      		// TODO
-			       // sender.Send(keyValue{n.key, n.val}) &&
+			       // sender.Send(keyValue[K, V]{n.key, n.val}) &&
 			       f(n.right)
 		}
 		
@@ -100,26 +126,7 @@ gen Map[K, V type] import {
 			sender.Close()
 		}()
 		
-		return &Iterator{receiver}
-	}
-	
-	// Iterator is used to iterate over the map.
-	type Iterator struct {
-		r *chans.Receiver(keyValue)
-	}
-	
-	// Next returns the next key and value pair, and a boolean indicating
-	// whether they are valid or whether we have reached the end.
-	func (it *Iterator) Next() (K, V, bool) {
-		keyval, ok := it.r.Next()
-		if !ok {
-			var zerok K
-			var zerov V
-			return zerok, zerov, false
-		}
-		
-		return keyval.key, keyval.val, true
+		return &Iterator[K, V]{receiver}
 	}
 }
-	
 

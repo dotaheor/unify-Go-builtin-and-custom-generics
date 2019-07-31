@@ -1,14 +1,11 @@
 package set
 
-gen Set[Elem type] import {
+gen Set[Elem type] type {
 	comparable[Elem] // apply an extra contract
 
-	// For a gen which ouputs an import, all the exported types
-	// and functions declared in the gen body will be outputted,
-	// their exported names are just their declaration names.
-	//
-	// For this specified gen, one type (with 5 methods) and one
-	// funciton will be outputted together in a mini-pacakge.
+	// The only exported type is used as the output of the generic.
+	// NOTE: the name of the declared type is not important,
+	//       as long as it is exported.
 
 	type Set map[Elem]struct{}
 	func (s Set) Add(v Elem) {
@@ -29,9 +26,14 @@ gen Set[Elem type] import {
 			f(v)
 		}
 	}
+}
 
-	func Make() Set {
-		return make(Set)
+gen Make[Elem type] func {
+	// The only exported function is used as the output of the generic.
+	// NOTE: the name of the declared function is not important,
+	//       as long as it is exported.
+	func Make() Set[Elem] {
+		return make(Set[Elem])
 	}
 }
 	
