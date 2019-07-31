@@ -11,7 +11,7 @@ gen Map[K, V type] import {
 	// For this specified gen, two types and one function will
 	// be outputted together in a mini-pacakge.
 	// * the New function.
-	// * the Map type, which has 3 exported methods.
+	// * the Map type, which has four exported methods.
 	// * the Iterator type, which has one exported method.
 	
 	type Map struct {
@@ -90,7 +90,7 @@ gen Map[K, V type] import {
 			// Stop sending values if sender.Send returns false,
 			// meaning that nothing is listening at the receiver end.
 			return f(n.left) &&
-		           // TODO
+		      		// TODO
 			       // sender.Send(keyValue{n.key, n.val}) &&
 			       f(n.right)
 		}

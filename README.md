@@ -11,12 +11,12 @@ I think they are really good to unify the appearances and explanations of generi
 In my opinion, the solution has much better readibilities than the generic design in C++, Rust, Java, etc.
 The biggest advantage of this proposal is the new introduced `gen` elements are much like our familiar `func` element, which makes the proposal very easy to understand.
 
-Comparing the current official generic/contract draft,
+Comparing to the current official generic/contract draft,
 personally, I think this proposal has the following advantages:
 1. support const generic parameters (the draft only supports types now).
 1. consistent looking of builtin and custom generics.
 1. the body of a generic declaration is totally Go 1 compatible.
-1. using generics is much like calling functions,so it is easy to understand.
+1. using generics is much like calling functions, so it is easy to understand.
 
 ## Overview of this solution
 
@@ -34,7 +34,8 @@ gen GenName[in0 InputElemKind0, in1 InputElemKind1, ...] [out OutputElemKind] {
 ```
 
 where each `ElemKind` can be any of `var`, `const`, `func`, `type`, `import`, and `gen`.
-(However, `var` inputs and outputs are almost never used for it is not much useful.)
+(However, `var` inputs and outputs are almost never used for it is not much useful.
+`func` and `import` inputs are also not very useful.)
 The number of the outputs of a `gen` decalration can be zero or one.
 If a `gen` has no outputs, then it is viewed as a pure contract.
 
