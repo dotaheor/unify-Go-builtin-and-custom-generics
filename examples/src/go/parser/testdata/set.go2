@@ -16,11 +16,12 @@ gen Set[Elem type] type {
 	}
 	func (s Set) Contains(v Elem) bool {
 		_, ok := s[v]
-			return ok
-		}
-		func (s Set) Len() int {
+		return ok
+	}
+	func (s Set) Len() int {
 		return len(s)
 	}
+	
 	func (s Set) Iterate(f func(Elem)) {
 		for v := range s {
 			f(v)
@@ -36,6 +37,17 @@ gen Make[Elem type] func {
 		return make(Set[Elem])
 	}
 }
-	
+
+// use the gens
+/*
+
+func f() {
+	var s = Set[string]
+	s.Add("abc")
+	s.Add("def")
+	println(s.Len())
+}
+*/
+
 
 	

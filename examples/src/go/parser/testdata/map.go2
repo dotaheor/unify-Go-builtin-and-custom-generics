@@ -41,92 +41,118 @@ gen Iterator[K, V type] type {
 }
 
 	
-gen Map[K, V type] type {
-	
-	// The only exported type is used as the output of the generic.
-	// NOTE: the name of the declared type is not important,
+gen Map[K type] gen {
+	// The only exported gen is used as the output of the generic.
+	// NOTE: the name of the declared gen is not important,
 	//       as long as it is exported.
-	type Map struct {
-		root    *node
-		compare func(K, K) int
-	}
-
-	type node struct {
-		key         K
-		val         V
-		left, right *node
-	}
-
-	func New(compare func(K, K) int) *Map {
-		return &Map{compare: compare}
-	}
+	gen Map[V type] type {
 	
-	// find looks up key in the map, and returns either a pointer
-	// to the node holding key, or a pointer to the location where
-	// such a node would go.
-	func (m *Map) find(key K) **node {
-		pn := &m.root
-		for *pn != nil {
-			switch cmp := m.compare(key, (*pn).key); {
-			case cmp < 0:
-				pn = &(*pn).left
-			case cmp > 0:
-				pn = &(*pn).right
-			default:
-				return pn
-			}
+		// The only exported type is used as the output of the generic.
+		// NOTE: the name of the declared type is not important,
+		//       as long as it is exported.
+		type Map struct {
+			root    *node
+			compare func(K, K) int
 		}
-		return pn
-	}
 
-	// Insert inserts a new key/value into the map.
-	// If the key is already present, the value is replaced.
-	// Returns true if this is a new key, false if already present.
-	func (m *Map) Insert(key K, val V) bool {
-		pn := m.find(key)
-		if *pn != nil {
-			(*pn).val = val
-			return false
+		type node struct {
+			key         K
+			val         V
+			left, right *node
 		}
-		*pn = &node{key: key, val: val}
-		return true
+
+		func New(compare func(K, K) int) *Map {
+			return &Map{compare: compare}
+		}
 		
-	}	
-
-	// Find returns the value associated with a key, or zero if not present.
-	// The found result reports whether the key was found.
-	func (m *Map) Find(key K) (V, bool) {
-		pn := m.find(key)
-		if *pn == nil {
-			var zero V // see the discussion of zero values, above
-			return zero, false
+		// find looks up key in the map, and returns either a pointer
+		// to the node holding key, or a pointer to the location where
+		// such a node would go.
+		func (m *Map) find(key K) **node {
+			pn := &m.root
+			for *pn != nil {
+				switch cmp := m.compare(key, (*pn).key); {
+				case cmp < 0:
+					pn = &(*pn).left
+				case cmp > 0:
+					pn = &(*pn).right
+				default:
+					return pn
+				}
+			}
+			return pn
 		}
-		return (*pn).val, true
-	}
-	
-	// InOrder returns an iterator that does an in-order traversal of the map.
-	func (m *Map) InOrder() *Iterator[K, V] {
-		sender, receiver := chans.Ranger[keyValue[K, V]]()
-		var f func(*node) bool
-		f = func(n *node) bool {
-			if n == nil {
-				return true
+
+		// Insert inserts a new key/value into the map.
+		// If the key is already present, the value is replaced.
+		// Returns true if this is a new key, false if already present.
+		func (m *Map) Insert(key K, val V) bool {
+			pn := m.find(key)
+			if *pn != nil {
+				(*pn).val = val
+				return false
+			}
+			*pn = &node{key: key, val: val}
+			return true
+			
+		}	
+
+		// Find returns the value associated with a key, or zero if not present.
+		// The found result reports whether the key was found.
+		func (m *Map) Find(key K) (V, bool) {
+			pn := m.find(key)
+			if *pn == nil {
+				var zero V // see the discussion of zero values, above
+				return zero, false
+			}
+			return (*pn).val, true
+		}
+		
+		// InOrder returns an iterator that does an in-order traversal of the map.
+		func (m *Map) InOrder() *Iterator[K, V] {
+			sender, receiver := chans.Ranger[keyValue[K, V]]()
+			var f func(*node) bool
+			f = func(n *node) bool {
+				if n == nil {
+					return true
+				}
+				
+				// Stop sending values if sender.Send returns false,
+				// meaning that nothing is listening at the receiver end.
+				return f(n.left) &&
+			      		// TODO
+					// sender.Send(keyValue[K, V]{n.key, n.val}) &&
+					f(n.right)
 			}
 			
-			// Stop sending values if sender.Send returns false,
-			// meaning that nothing is listening at the receiver end.
-			return f(n.left) &&
-		      		// TODO
-			       // sender.Send(keyValue[K, V]{n.key, n.val}) &&
-			       f(n.right)
+			go func() {
+				f(m.root)
+				sender.Close()
+			}()
+			
+			return &Iterator[K, V]{receiver}
+		} // type
+	} // gen
+}
+
+// use the gens
+/*
+
+func f() {
+	var m = Map[string]int{} // quite like using the builtin map
+	m.Insert("abc", 1)
+	m.Insert("def", 2)
+	var n, ok = m.Find("abc")
+
+	it := m.InOrder
+	for {
+		k, v, ok := it.Next()
+		if !ok {
+			break
 		}
 		
-		go func() {
-			f(m.root)
-			sender.Close()
-		}()
-		
-		return &Iterator[K, V]{receiver}
+		// ... use k and v
 	}
 }
+*/
 
