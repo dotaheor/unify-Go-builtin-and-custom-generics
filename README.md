@@ -11,6 +11,13 @@ I think they are really good to unify the appearances and explanations of generi
 In my opinion, the solution has much better readibilities than the generic design in C++, Rust, Java, etc.
 The biggest advantage of this proposal is the new introduced `gen` elements are much like our familiar `func` element, which makes the proposal very easy to understand.
 
+Comparing the current official generic/contract draft,
+personally, I think this proposal has the following advantages:
+1. support const generic parameters (the draft only supports types now).
+1. consistent looking of builtin and custom generics.
+1. the body of a generic declaration is totally Go 1 compatible.
+1. using generics is much like calling functions,so it is easy to understand.
+
 ## Overview of this solution
 
 Now, there are 5 kinds of code element declarations (except labels) in Go: `var`, `const`, `func`, `type`, and `import`.
@@ -245,7 +252,7 @@ In it uses, the generic identifier `array` and `slice` must be absent. (This is 
 Builtin map declaration:
 ```
 gen map[Tkey type] gen {
-	gen Map[T type] type {
+	gen Map[Tvalue type] type {
 		... // export a map type
 	}
 }
@@ -327,15 +334,17 @@ gen SetViaStrings[To, From type] func {
 Another example: the builtin map generic can be delcared as
 ```
 gen TreeMap[Tkey type] gen {
-	comparable[Tkey] // call another contract to tighten the requirements for Tkey
+	comparable[Tkey] // call another contract to tighten the requirements for Tkey.
+	                 // "comparable" is a builtin gen/contract.
 	
-	gen TreeMap[T type] type {
+	gen TreeMap[Tvalue type] type {
 		... // export a tree map type
 	}
 }
 ```
 
-where `comparable` a builtin contract (a builtin `gen`).
+Personally, I think we should use a hybrid way of the official contract draft
+version 1 and version 2 to define contracts.
 
 ## What is the meaningfullness of calling a contract generic in another generic?
 
