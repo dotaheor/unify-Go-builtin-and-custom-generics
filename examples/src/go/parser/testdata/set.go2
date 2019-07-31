@@ -42,7 +42,7 @@ gen Make[Elem type] func {
 /*
 
 func f() {
-	var s = Make[string]
+	var s = Make[string]()
 	s.Add("abc")
 	s.Add("def")
 	println(s.Len())
