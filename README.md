@@ -55,7 +55,8 @@ gen ConvertSlice[OldElement, NewElement type] [func] {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
-	func Convert(x []OldElement) []NewElement {
+	//       It is recommended to use the same name as the gen.
+	func ConvertSlice(x []OldElement) []NewElement {
 		if x == nil {
 			return nil
 		}
@@ -106,13 +107,14 @@ gen List[T type] type {
 	// The only exported type is used as the output of the generic.
 	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported.
-	type ListNode struct {
+	//       It is recommended to use the same name as the gen.
+	type List struct {
 		Element T
 		Next    *ListNode
 	}
 	
-	func (n *ListNode) Push(e T) *ListNode {...}
-	func (n *ListNode) Dump() {...}
+	func (n *List) Push(e T) *List {...}
+	func (n *List) Dump() {...}
 	
 	// Some other unexport variables/constants/types/functions
 	// can be declared here.
@@ -180,12 +182,17 @@ gen TreeMap[Key type] [gen] {
 	// The only exported gen is used as the output of the generic.
 	// NOTE: the name of the declared gen is not important,
 	//       as long as it is exported.
+	//       It is recommended to use the same name as the enclosing gen.
 	gen TreeMap[Element type] type {
-		type Tree struct {...}
-		func (t *Tree) Put(k Key, e Element) {...}
-		func (t *Tree) Get(k Key) Element {...}
-		func (t *Tree) Has(k Key) bool {...}
-		func (t *Tree) Delete(k Key)(Element, bool) {...}
+		// The only exported type is used as the output of the generic.
+		// NOTE: the name of the declared type is not important,
+		//       as long as it is exported.
+		//       It is recommended to use the same name as the enclosing gen.
+		type TreeMap struct {...}
+		func (t *TreeMap) Put(k Key, e Element) {...}
+		func (t *TreeMap) Get(k Key) Element {...}
+		func (t *TreeMap) Has(k Key) bool {...}
+		func (t *TreeMap) Delete(k Key)(Element, bool) {...}
 	}
 }
 
