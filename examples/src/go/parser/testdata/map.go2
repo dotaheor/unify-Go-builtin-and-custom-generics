@@ -144,7 +144,7 @@ func f() {
 	m.Insert("def", 2)
 	var n, ok = m.Find("abc")
 
-	it := m.InOrder
+	it := m.InOrder()
 	for {
 		k, v, ok := it.Next()
 		if !ok {
