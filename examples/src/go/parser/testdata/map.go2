@@ -145,7 +145,7 @@ gen Map[K type] gen {
 }
 
 
-gen New[K type] func {
+gen New[K, V type] func {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
