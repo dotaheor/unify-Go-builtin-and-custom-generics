@@ -45,11 +45,15 @@ gen Map[K type] gen {
 	// The only exported gen is used as the output of the generic.
 	// NOTE: the name of the declared gen is not important,
 	//       as long as it is exported.
+	//
+	// The inner Map gen shadows the outer Map gen.
 	gen Map[V type] type {
 	
 		// The only exported type is used as the output of the generic.
 		// NOTE: the name of the declared type is not important,
 		//       as long as it is exported.
+		//
+		// The type shadows the inner Map gen.
 		type Map struct {
 			root    *node
 			compare func(K, K) int
