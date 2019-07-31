@@ -73,10 +73,6 @@ gen Map[K type] gen {
 			val         V
 			left, right *node
 		}
-
-		func New(compare func(K, K) int) *Map {
-			return &Map{compare: compare}
-		}
 		
 		// find looks up key in the map, and returns either a pointer
 		// to the node holding key, or a pointer to the location where
@@ -148,11 +144,23 @@ gen Map[K type] gen {
 	} // gen
 }
 
+
+gen New[K type] gen {
+	// The only exported function is used as the output of the generic.
+	// NOTE: the name of the declared function is not important,
+	//       as long as it is exported.
+	func New(compare func(K, K) int) *Map[K]V{
+		return &Map[K]V{compare: compare}
+	}
+}
+
 // use the gens
 /*
 
+import "strings"
+
 func f() {
-	var m = Map[string]int{} // quite like using the builtin map
+	var m = New[string, int](strings.Compare)
 	m.Insert("abc", 1)
 	m.Insert("def", 2)
 	var n, ok = m.Find("abc")
