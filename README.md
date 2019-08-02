@@ -17,8 +17,8 @@ personally, I think this proposal has the following advantages:
 1. consistent looking of builtin and custom generics.
 1. the body of a generic declaration is totally Go 1 compatible.
 1. using generics is much like calling functions, so it is easy to understand.
-1.1 supporting multiple outputs as a mini package.
-1.1 supporting generic closure.
+  * supporting multiple outputs as a mini package.
+  * supporting generic closure.
 
 ## Overview of this solution
 
@@ -256,7 +256,7 @@ gen slice[] gen {
 }
 ```
 
-In it uses, the generic identifier `array` and `slice` must be absent. (This is a builtin generic privilege).
+In their uses, the generic identifier `array` and `slice` must be absent. (This is a builtin generic privilege).
 
 Builtin map declaration:
 ```
@@ -340,7 +340,7 @@ gen SetViaStrings[To, From type] func {
 }
 ```
 
-Another example: the builtin map generic can be delcared as
+Another example: the above `TreeMap` generic can be delcared as
 ```
 gen TreeMap[Tkey type] gen {
 	comparable[Tkey] // call another contract to tighten the requirements for Tkey.
@@ -424,8 +424,8 @@ gen make[T type] func {
 
 // use it:
 
-var m = new[map[int]string]() // different from Go 1
-var s = new[[]int](100)       // different from Go 1
+var m = make[map[int]string]() // different from Go 1
+var s = make[[]int](100)       // different from Go 1
 ```
 
 To make the unification complete, we can add a rule that allows
@@ -434,7 +434,7 @@ a generic function call, if the generic argument list contains only types.
 By this rule, the above `new` and `make` calls can be written as:
 ```
 var x = new(string)
-var m = new(map[intstring)
-var s = new([]int, 100)
+var m = make(map[intstring)
+var s = make([]int, 100)
 ```
 
