@@ -165,7 +165,7 @@ gen Example[] [import] {
 
 // use it
 
-import alib = Example[] // we can use alib as an imported package
+import alib Example[] // we can use alib as an imported package
 
 func main() {
 	var v alib.Bar
