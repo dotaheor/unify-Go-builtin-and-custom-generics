@@ -1,0 +1,127 @@
+package orderedmap
+	
+import "chans"
+
+gen Map[K, V type] import {
+
+	type KeyValue struct {
+		key K
+		val V
+	}
+
+	type Iterator struct {
+		r *chans.Receiver[keyValue]
+	}
+	
+	func (it *Iterator) Next() (K, V, bool) {
+		keyval, ok := it.r.Next()
+		if !ok {
+			var zerok K
+			var zerov V
+			return zerok, zerov, false
+		}
+		
+		return keyval.key, keyval.val, true
+	}
+
+
+	type Map struct {
+		root    *node
+		compare func(K, K) int
+	}
+
+	type node struct {
+		key         K
+		val         V
+		left, right *node
+	}
+
+	func (m *Map) find(key K) **node {
+		pn := &m.root
+		for *pn != nil {
+			switch cmp := m.compare(key, (*pn).key); {
+			case cmp < 0:
+				pn = &(*pn).left
+			case cmp > 0:
+				pn = &(*pn).right
+			default:
+				return pn
+			}
+		}
+		return pn
+	}
+
+	func (m *Map) Insert(key K, val V) bool {
+		pn := m.find(key)
+		if *pn != nil {
+			(*pn).val = val
+			return false
+		}
+		*pn = &node{key: key, val: val}
+		return true
+		
+	}	
+
+	func (m *Map) Find(key K) (V, bool) {
+		pn := m.find(key)
+		if *pn == nil {
+			var zero V // see the discussion of zero values, above
+			return zero, false
+		}
+		return (*pn).val, true
+	}
+	
+	func (m *Map) InOrder() *Iterator {
+		sender, receiver := chans.Ranger[keyValue]()
+		var f func(*node) bool
+		f = func(n *node) bool {
+			if n == nil {
+				return true
+			}
+			
+			// Stop sending values if sender.Send returns false,
+			// meaning that nothing is listening at the receiver end.
+			return f(n.left) &&
+		      		// TODO
+				// sender.Send(keyValue{n.key, n.val}) &&
+				f(n.right)
+		}
+		
+		go func() {
+			f(m.root)
+			sender.Close()
+		}()
+		
+		return &Iterator{receiver}
+	}
+
+	func New(compare func(K, K) int) *Map{
+		return &Map{compare: compare}
+	}
+}
+
+// use the gens
+/*
+
+import "strings"
+
+import map Map[string, int]
+
+func f() {
+	var m = map.New[string, int](strings.Compare)
+	m.Insert("abc", 1)
+	m.Insert("def", 2)
+	var n, ok = m.Find("abc")
+
+	it := m.InOrder()
+	for {
+		k, v, ok := it.Next()
+		if !ok {
+			break
+		}
+		
+		// ... use k and v
+	}
+}
+*/
+

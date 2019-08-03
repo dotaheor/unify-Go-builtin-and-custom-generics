@@ -17,6 +17,8 @@ personally, I think this proposal has the following advantages:
 1. consistent looking of builtin and custom generics.
 1. the body of a generic declaration is totally Go 1 compatible.
 1. using generics is much like calling functions, so it is easy to understand.
+  * supporting multiple outputs as a mini package.
+  * supporting generic closure.
 
 ## Overview of this solution
 
@@ -163,7 +165,7 @@ gen Example[] [import] {
 
 // use it
 
-import alib = Example[] // we can use alib as an imported package
+import alib Example[] // we can use alib as an imported package
 
 func main() {
 	var v alib.Bar
@@ -207,9 +209,8 @@ func main() {
 }
 ```
 
-We can call the `TreeMap` generic use case as a generic chain with two generics.
-The uses in the above three other examples can also be called as generic chain,
-but each of them only uses one generic.
+We can call the inner `TreeMap` generic use case as a generic closure.
+The use in the above example can also be called as a generic call chain.
 
 Note: by using [the simplifed form](#some-simple-single-output-gens-can-be-simplified) mentioned below,
 the above `gen` can also be declared as:
@@ -223,7 +224,7 @@ gen TreeMap[Key type] gen [Element type] type {
 }
 ```
 
-## If the last generic in a generic chain use has only one input, then the `[]` surrounding the argument can be omitted.
+## If the last generic in a generic call chain has only one input, then the `[]` surrounding the argument can be omitted.
 
 For example, in the last example above, the generic use can be
 ```
@@ -255,7 +256,7 @@ gen slice[] gen {
 }
 ```
 
-In it uses, the generic identifier `array` and `slice` must be absent. (This is a builtin generic privilege).
+In their uses, the generic identifier `array` and `slice` must be absent. (This is a builtin generic privilege).
 
 Builtin map declaration:
 ```
@@ -339,7 +340,7 @@ gen SetViaStrings[To, From type] func {
 }
 ```
 
-Another example: the builtin map generic can be delcared as
+Another example: the above `TreeMap` generic can be delcared as
 ```
 gen TreeMap[Tkey type] gen {
 	comparable[Tkey] // call another contract to tighten the requirements for Tkey.
@@ -423,7 +424,17 @@ gen make[T type] func {
 
 // use it:
 
-var m = new[map[int]string]() // different from Go 1
-var s = new[[]int](100)       // different from Go 1
+var m = make[map[int]string]() // different from Go 1
+var s = make[[]int](100)       // different from Go 1
+```
+
+To make the unification complete, we can add a rule that allows
+merging the generic argument list into the genernal value argument list in
+a generic function call, if the generic argument list contains only types.
+By this rule, the above `new` and `make` calls can be written as:
+```
+var x = new(string)
+var m = make(map[intstring)
+var s = make([]int, 100)
 ```
 
