@@ -55,7 +55,7 @@ gen ConvertSlice[OldElement, NewElement type] [func] {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
-	//       It is recommended to use the same name as the gen.
+	//       It is recommended to use the same name as the gen, if possible.
 	func ConvertSlice(x []OldElement) []NewElement {
 		if x == nil {
 			return nil
@@ -107,10 +107,10 @@ gen List[T type] type {
 	// The only exported type is used as the output of the generic.
 	// NOTE: the name of the declared type is not important,
 	//       as long as it is exported.
-	//       It is recommended to use the same name as the gen.
+	//       It is recommended to use the same name as the gen, if possible.
 	type List struct {
 		Element T
-		Next    *ListNode
+		Next    *List
 	}
 	
 	func (n *List) Push(e T) *List {...}
@@ -182,12 +182,12 @@ gen TreeMap[Key type] [gen] {
 	// The only exported gen is used as the output of the generic.
 	// NOTE: the name of the declared gen is not important,
 	//       as long as it is exported.
-	//       It is recommended to use the same name as the enclosing gen.
+	//       It is recommended to use the same name as the enclosing gen, if possible.
 	gen TreeMap[Element type] type {
 		// The only exported type is used as the output of the generic.
 		// NOTE: the name of the declared type is not important,
 		//       as long as it is exported.
-		//       It is recommended to use the same name as the enclosing gen.
+		//       It is recommended to use the same name as the enclosing gen, if possible.
 		type TreeMap struct {...}
 		func (t *TreeMap) Put(k Key, e Element) {...}
 		func (t *TreeMap) Get(k Key) Element {...}
