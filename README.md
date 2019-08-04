@@ -226,6 +226,11 @@ gen TreeMap[Key type] gen [Element type] type {
 
 ## If the last generic in a generic call chain has only one input, then the `[]` surrounding the argument can be omitted.
 
+If we observe builtin generic syntax carefully, we will find that the last generic arguments are not enclosed in `[]`.
+For example: `array[5]int`, `slice[]int`, `map[string]int`, `chan int`.
+(Surely, the `array` and `slice` identifier must be ommited in uses, so below for details.)
+
+We can apply this same rule for custom generics.
 For example, in the last example above, the generic use can be
 ```
 type stringIntTreeMap = TreeMap[string]int
