@@ -423,7 +423,7 @@ and make:
 gen make[T type] func {
 	sameKind[T, []T] || sameKind[T, map[int]T] // sameKind is a builtin contract
 	
-	func Make(params ...int) {
+	func Make(params ...int) T {
 		// ....
 	}
 }
