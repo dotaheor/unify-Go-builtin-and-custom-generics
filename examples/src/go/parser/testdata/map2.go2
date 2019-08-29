@@ -105,7 +105,7 @@ gen Map[K, V type] import {
 
 import "strings"
 
-import map Map[string, int]
+import map = Map[string, int]
 
 func f() {
 	var m = map.New[string, int](strings.Compare)

@@ -166,7 +166,7 @@ gen Example[] [import] {
 
 // use it
 
-import alib Example[] // we can use alib as an imported package
+import alib = Example[] // we can use alib as an imported package
 
 func main() {
 	var v alib.Bar
@@ -291,6 +291,7 @@ gen chan[T type] type {
 	}
 }
 
+// "<-chan" is the name of the gen.
 gen <-chan[T type] type {
 	type C struct {
 		...
@@ -301,6 +302,7 @@ gen <-chan[T type] type {
 	}
 }
 
+// "chan<-" is the name of the gen.
 gen chan<-[T type] type {
 	type C struct {
 		...
@@ -315,6 +317,8 @@ gen chan<-[T type] type {
 The literal representations of directional channel types are also builtin generic privileges.
 
 Operator function generics are also builtin generic privileges.
+
+(BTW, can we make `map` and `chan` become non-keywords?)
 
 ## `gen`s are also contracts
 
@@ -361,6 +365,12 @@ gen TreeMap[Tkey type] gen {
 Personally, I think we should use a hybrid way of the official contract draft
 version 1 and version 2 to define contracts.
 
+It would be great if it is possible that compilers can construct a contract from each `gen` block automatically.
+A contrat is a rule set after all.
+For many `gen` blocks, their contracts (the rule sets) are verbose to clearly write down manually,
+for each of the sets might contain many rules and some of the rules might be subtle.
+However, this is not hard job for computers.
+
 ## What is the meaningfullness of calling a contract generic in another generic?
 
 For example, in the last example, the `TreeMap` calls the `comparable` generic.
@@ -398,7 +408,7 @@ gen identity[T type] func (x T) T {
 	return x
 }
 
-gen set[T type] map[T]struct{}
+gen set[T type] type map[T]struct{}
 ```
 
 ## Remaining problems
