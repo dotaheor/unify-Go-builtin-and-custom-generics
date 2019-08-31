@@ -14,12 +14,12 @@ and using a `gen` is much like calling a function, which makes the proposal very
 
 Comparing to the current official generic/contract draft,
 personally, I think this proposal has the following advantages:
-1. support const generic parameters (the draft only supports types now).
+1. supports const generic parameters (the draft only supports types now).
 1. consistent looking of builtin and custom generics.
 1. the body of a generic declaration is totally Go 1 compatible.
-1. using generics is much like calling functions, so it is easy to understand.
-  * supporting multiple outputs as a mini package.
-  * supporting generic closure.
+1. uses generics is much like calling functions, so it is easy to understand.
+	* supporting multiple outputs as a mini package.
+ 	* supporting generic closure.
 
 ## Overview of this solution
 
@@ -175,7 +175,7 @@ func main() {
 ```
 
 BTW, here are two comparisons between this proposal and the latest official draft:
-1. Map: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/map.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map.go2).
+1. Map: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/map.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map.go2) (and [another multi-output version](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map2.go2)).
 1. Set: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/set.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/set.go2).
 
 ### Example 4 (a `gen` output):
@@ -254,6 +254,7 @@ gen array[N const] gen {
 		... // export an array type
 	}
 }
+
 
 gen slice[] gen {
 	gen Slice[T type] type {
@@ -371,7 +372,9 @@ For many `gen` blocks, their contracts (the rule sets) are verbose to clearly wr
 for each of the sets might contain many rules and some of the rules might be subtle.
 However, this is not hard job for computers.
 
-NOTE: implicit contract definition is just one opinion. This proposal may work well with explicit contracts, too.
+NOTE: implicit contract definition is just one opinion.
+This proposal doesn't exclude explicit contracts.
+In fact it also works well with explicit contracts.
 
 ## What is the meaningfullness of calling a contract generic in another generic?
 
