@@ -371,6 +371,8 @@ For many `gen` blocks, their contracts (the rule sets) are verbose to clearly wr
 for each of the sets might contain many rules and some of the rules might be subtle.
 However, this is not hard job for computers.
 
+NOTE: implicit contract definition is just one opinion. This proposal may work well with explicit contracts, too.
+
 ## What is the meaningfullness of calling a contract generic in another generic?
 
 For example, in the last example, the `TreeMap` calls the `comparable` generic.
