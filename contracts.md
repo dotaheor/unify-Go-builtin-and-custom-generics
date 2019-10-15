@@ -178,7 +178,7 @@ For example,
 ```
 assure anyKind[Ta]                     // Ta can be any kind
 assure anyKind[Tx, string]             // Tx must be of string kind
-assure anyKind[Ty, string, int, int64] // Ty can anyh of string, int or int64 kind
+assure anyKind[Ty, string, int, int64] // Ty can be any of string, int or int64 kind
 ```
 
 #### `impelements[Tx, Ty type]`
