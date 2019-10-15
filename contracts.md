@@ -12,7 +12,8 @@ _(Other candidates to replace the `assure` keyword: `require`, `must`, etc.)_
 ## Properties
 
 `type` properties:
-* `T.kind`
+* `T.kind`, means the kind of the type represented by `T`.
+* `T.value`, means an unspecified value of the type represented by `T`.
 * `T.name`, `""` for `T` represents neither a defined type or a type alias.
 * `T.defined`, whether or not the type represetned by `T` represents a defined type.
    Note: `T.name != "" && !T.defined` is `true` means `T` is a type alias.
