@@ -154,7 +154,7 @@ Whether or not the input types are identical types.
 
 For example,
 ```
-identical[Tx.base, Ty.element, Tz.key]
+assure identical[Tx.base, Ty.element, Tz.key]
 ```
 
 
@@ -164,7 +164,7 @@ Whether or not the input types belong to the same kind.
 
 For example,
 ```
-sameKind[map[any]any, Tx, Ty]
+assure sameKind[map[any]any, Tx, Ty]
 ```
 
 where [`any` is an alias of `interface{}`](https://github.com/golang/go/issues/33232).
@@ -176,9 +176,9 @@ Whether or not first input type is any kind of the kinds of the following input 
 
 For example,
 ```
-anyKind[Ta]                     // Ta can be any kind
-anyKind[Tx, string]             // Tx must be of string kind
-anyKind[Ty, string, int, int64] // Ty can anyh of string, int or int64 kind
+assure anyKind[Ta]                     // Ta can be any kind
+assure anyKind[Tx, string]             // Tx must be of string kind
+assure anyKind[Ty, string, int, int64] // Ty can anyh of string, int or int64 kind
 ```
 
 #### `impelements[Tx, Ty type]`
@@ -212,7 +212,9 @@ gen Min(T type) func {
 }
 
 gne Max(T type) func {
-	assure Min[T] // apply the contract of the Min gen to the Max gen
+	assure Min[T] // Apply the contract of the Min gen to the Max gen.
+	              // The effect is the same as appending all the assure
+		      // lines in the Min gen to the Max gen.
 	
 	func Max(x, t T) T {
 		if x > y {
@@ -221,6 +223,18 @@ gne Max(T type) func {
 			return y
 		}
 	}
+}
+```
+
+In fact, a no-outputs `gen` is totally for constraints definition purpose.
+```
+gen ConditionSet[Tx, Ty, Tz type] {
+	type S = []Tx
+	assure assignable[S, Ty]
+	assure sameKind(Tz, func()]
+	type M struct {Y Ty}
+	assure convertible[Tz.inputs.0, M]
+	// ... more conditions
 }
 ```
 
