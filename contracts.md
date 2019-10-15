@@ -224,14 +224,14 @@ Or (good or bad):
 assure Ta.kind == Tb.kind || Ta.kind == Tc.kind
 ```
 
-#### `impelements[Tx, Ty type]`
+#### `implements[Tx, Ty type]`
 
 Whether the type represented by `Tx` implements the interface type represented by `Ty`.
 
 Examples:
 ```
-assure impelements[Ta, interface{M1()}]
-assure impelements[Ta.element, Tm.key]
+assure implements[Ta, interface{M1()}]
+assure implements[Ta.element, Tm.key]
 ```
 
 _(This contract is a little overlapping with the `T.methods` expression mentioned above.)_
