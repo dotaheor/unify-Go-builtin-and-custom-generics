@@ -1,4 +1,8 @@
 
+This contract propsoal is the planned part of [the generic design](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics).
+
+
+
 There are two kinds of ways to describe a constraint:
 1. use constraint expressions.
 1. through contract calls.
