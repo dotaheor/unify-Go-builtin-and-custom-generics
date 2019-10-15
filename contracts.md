@@ -238,7 +238,7 @@ gen ConditionSet[Tx, Ty, Tz type] {
 }
 ```
 
-The `ConditionSet` `gen` can called in other `gen` declartions to constraint some types.
+The `ConditionSet` `gen` can be called in other `gen` declartions to constraint some types.
 ```
 gen MyGen[Ta, Tb, Tc, Td] [type] {
 	assure ConditionSet[Tb, Tc, Td]
