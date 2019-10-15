@@ -64,9 +64,8 @@ _(Other candidates to replace the `assure` keyword: `require`, `must`, etc.)_
 `const` properties:
 * `C.name`: the name of the constant represented by `C` is signed.
 * `C.typed`: whether or not the constant represented by `C` is signed.
-* `C.type`: the type of a signed constant represent by `C`.
-   (There must be an aforementioned contract constraints `C` to represent
-   a signed constant).
+   (Maybe, it is good to require all generic constants must be signed.)
+* `C.type`: the type or default type of a constant represent by `C`.
 
 (`var`, `func` and `gen` can also be used as contract parameters/arguments,
 but doing this will bring much complexity. So this is not supported temporarily.)
@@ -103,30 +102,63 @@ Some more complex ones:
 assure T.methods (
 		M1 func(string) int
 		M2 func(..int) (string, error)s
+		Ty.methods
 	)
 assure T.fields (
 		X int
 		Y string
+		Tx.fields
 	)
 assure T.selectors (
 		X int
 		F func(string) int
+		Tz.selectors
 	)
 ```
 
 ## Built-in contract calls
 
-#### `comparable[Ts ...type]`
+#### `comparable[Tx, Ty type]`
 
 Whether the values of the input types are comparable with each other.
 
 Examples:
 ```
 assure comparable[Ta, Tb]
-assure comparable[Tx, Ty, Tx]
+assure comparable[Tx.base, map[Ty]int]
 ```
 
-#### sameKind[T ...type]
+#### `assignable[Td, Ts type]`
+
+Whether the values of `Ts` can be assigned to type `Td`.
+
+Examples:
+```
+assure assignable[[]int, Ta]
+assure assignable[interface{M()}, Tx]
+```
+
+#### `convertible[Td, Ts type]`
+
+Whether the values of `Ts` can be converted to type `Td`.
+
+Examples:
+```
+assure convertible[[]int, Ta]
+assure convertible[interface{M()}, Tx]
+```
+
+#### identical[Tx, Ty, T ...type]
+
+Whether or not the input types are identical types.
+
+For example,
+```
+identical[Tx.base, Ty.element, Tz.key]
+```
+
+
+#### sameKind[Tx, Ty, T ...type]
 
 Whether or not the input types belong to the same kind.
 
@@ -144,7 +176,9 @@ Whether or not first input type is any kind of the kinds of the following input 
 
 For example,
 ```
-anyKind[Tx, string, int, int64]
+anyKind[Ta]                     // Ta can be any kind
+anyKind[Tx, string]             // Tx must be of string kind
+anyKind[Ty, string, int, int64] // Ty can anyh of string, int or int64 kind
 ```
 
 #### `impelements[Tx, Ty type]`
@@ -157,7 +191,7 @@ assure impelements[Ta, interface{M1()}]
 assure impelements[Ta.element, Tm.key]
 ```
 
-_(This contract might be not essential, becasue we can use the `T.methods` expression to achieve the same goal.)_
+_(This contract is a little overlapping with the `T.methods` expression mentioned above.)_
 
 ## Custom contract calls
 
