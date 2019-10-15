@@ -13,8 +13,8 @@ _(Other candidates to replace the `assure` keyword: `require`, `must`, etc.)_
 
 `type` properties:
 * `T.kind`
-* `T.name`, `""` for non-alias and non-defined types.
-* `T.defined`, whether or not the type represetned by `T` represents a defined.
+* `T.name`, `""` for `T` represents neither a defined type or a type alias.
+* `T.defined`, whether or not the type represetned by `T` represents a defined type.
    Note: `T.name != "" && !T.defined` is `true` means `T` is a type alias.
 * `T.comparable`, whether or not the type represetned by `T` represents a comparable type.
 * `T.signed`: whether or not the type represetned by `T` is a signed numeric type.
@@ -62,8 +62,8 @@ _(Other candidates to replace the `assure` keyword: `require`, `must`, etc.)_
 
 `const` properties:
 * `C.name`: the name of the constant represented by `C` is signed.
-* `C.typed`: whether or not the constant represented by `C` is signed.
-   (Maybe, it is good to require all generic constants must be signed.)
+* `C.typed`: whether or not the constant represented by `C` is typed.
+   (Maybe, it is good to require all generic constants must be typed.)
 * `C.type`: the type or default type of a constant represent by `C`.
 
 (`var`, `func` and `gen` can also be used as contract parameters/arguments,
