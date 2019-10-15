@@ -174,7 +174,7 @@ For example,
 assure sameKind[map[any]any, Tx, Ty]
 ```
 
-where [`any` is an alias of `interface{}`](https://github.com/golang/go/issues/33232).
+Here, let's suppose [`any` is an alias of `interface{}`](https://github.com/golang/go/issues/33232).
 
 
 #### anyKind[Tx type, Ts ...type]
