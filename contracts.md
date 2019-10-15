@@ -195,7 +195,7 @@ _(This contract is a little overlapping with the `T.methods` expression mentione
 
 ## Custom contract calls
 
-Custom `gen` declarations can be use custom contracts.
+Custom `gen` declarations can be used as custom contracts.
 
 An Example:
 ```
