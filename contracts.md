@@ -128,6 +128,11 @@ assure comparable[Ta, Tb]
 assure comparable[Tx.base, map[Ty]int]
 ```
 
+Or (good or bad):
+```
+assure Ta.value == Tb.value
+```
+
 #### `assignable[Td, Ts type]`
 
 Whether the values of `Ts` can be assigned to type `Td`.
@@ -136,6 +141,11 @@ Examples:
 ```
 assure assignable[[]int, Ta]
 assure assignable[interface{M()}, Tx]
+```
+
+Or (good or bad):
+```
+assure Ta.value = Tb.value
 ```
 
 #### `convertible[Td, Ts type]`
@@ -148,6 +158,11 @@ assure convertible[[]int, Ta]
 assure convertible[interface{M()}, Tx]
 ```
 
+Or (good or bad):
+```
+assure _ = Ta(Tb.value)
+```
+
 #### identical[Tx, Ty, T ...type]
 
 Whether or not the input types are identical types.
@@ -157,6 +172,11 @@ For example,
 assure identical[Tx.base, Ty.element, Tz.key]
 ```
 
+Or (good or bad):
+```
+assure Ta == Tb == Tc
+```
+
 #### distinct[Tx, Ty, T ...type]
 
 Whether or not the input types are distinct types.
@@ -164,6 +184,11 @@ Whether or not the input types are distinct types.
 For example,
 ```
 assure distinct[Tx.element, Ty.inputs.0, Tz.outputs.1]
+```
+
+Or (good or bad):
+```
+assure Ta != Tb != Tc
 ```
 
 #### sameKind[Tx, Ty, T ...type]
@@ -177,6 +202,11 @@ assure sameKind[map[any]any, Tx, Ty]
 
 Here, let's suppose [`any` is an alias of `interface{}`](https://github.com/golang/go/issues/33232).
 
+Or (good or bad):
+```
+assure Ta.kind == Tb.kind == Tc.kind
+```
+
 
 #### anyKind[Tx type, Ts ...type]
 
@@ -187,6 +217,11 @@ For example,
 assure anyKind[Ta]                     // Ta can be any kind
 assure anyKind[Tx, string]             // Tx must be of string kind
 assure anyKind[Ty, string, int, int64] // Ty can be any of string, int or int64 kind
+```
+
+Or (good or bad):
+```
+assure Ta.kind in (Tb.kind, Tc.kind)
 ```
 
 #### `impelements[Tx, Ty type]`
