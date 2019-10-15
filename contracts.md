@@ -17,7 +17,6 @@ _(Other candidates to replace the `assure` keyword: `require`, `must`, etc.)_
 * `T.defined`, whether or not the type represetned by `T` represents a defined.
    Note: `T.name != "" && !T.defined` is `true` means `T` is a type alias.
 * `T.comparable`, whether or not the type represetned by `T` represents a comparable type.
-* `T.sendable`: (`T` must represent a channel type), whether or not `T` represents a sendable channel.
 * `T.signed`: whether or not the type represetned by `T` is a signed numeric type.
    (There must be an aforementioned contract constraints `T` to represent
    an integer or floating-point type to use this property.)
