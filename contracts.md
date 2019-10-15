@@ -64,14 +64,14 @@ _(Other candidates to replace the `assure` keyword: `require`, `must`, etc.)_
 * `C.name`: the name of the constant represented by `C` is signed.
 * `C.typed`: whether or not the constant represented by `C` is typed.
    (Maybe, it is good to require all generic constants must be typed.)
-* `C.type`: the type or default type of a constant represent by `C`.
+* `C.type`: the type or default type of a constant represented by `C`.
 
-(`var`, `func` and `gen` can also be used as contract parameters/arguments,
+(`var`, `func`, `import` and `gen` can also be used as contract parameters/arguments,
 but doing this will bring much complexity. So this is not supported temporarily.)
 
 ## Built-in contract expressions
 
-Contract expressions can only be built-in.
+All contract expressions are built-in. Custom contract expressions are not supported.
 
 Simple ones:
 ```
@@ -93,14 +93,14 @@ assure T.fields.X int
 Specify the type represetned by `T` muse have a specified selector:
 ```
 assure T.selectors.X int
-assure T.selectors.F func(string) int // F can be either a method or field
+assure T.selectors.F func(string) int // F can be either a method or a field of a function type
 ```
 
 Some more complex ones:
 ```
 assure T.methods (
 		.M1 func(string) int
-		.M2 func(..int) (string, error)s
+		.M2 func(..int) (string, error)
 		Ty.methods // embed a method set
 	)
 assure T.fields (
@@ -156,6 +156,14 @@ For example,
 assure identical[Tx.base, Ty.element, Tz.key]
 ```
 
+#### distinct[Tx, Ty, T ...type]
+
+Whether or not the input types are distinct types.
+
+For example,
+```
+assure distinct[Tx.element, Ty.inputs.0, Tz.outputs.1]
+```
 
 #### sameKind[Tx, Ty, T ...type]
 
