@@ -221,7 +221,7 @@ assure anyKind[Ty, string, int, int64] // Ty can be any of string, int or int64 
 
 Or (good or bad):
 ```
-assure Ta.kind in (Tb.kind, Tc.kind)
+assure Ta.kind == Tb.kind || Ta.kind == Tc.kind
 ```
 
 #### `impelements[Tx, Ty type]`
