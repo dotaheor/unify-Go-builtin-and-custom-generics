@@ -234,7 +234,15 @@ assure implements[Ta, interface{M1()}]
 assure implements[Ta.element, Tm.key]
 ```
 
-_(This contract is a little overlapping with the `T.methods` expression mentioned above.)_
+This contract is a little overlapping with the `T.methods` expression mentioned above. For example,
+```
+assure Ta.methods (
+		interface{M1()}.methods
+	)
+assure Ta.element.methods (
+		Tm.key.methods
+	)
+```
 
 ## Custom contract calls
 
