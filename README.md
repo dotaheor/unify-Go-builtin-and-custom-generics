@@ -258,7 +258,7 @@ gen array[N const] gen {
 
 gen slice[] gen {
 	gen Slice[T type] type {
-		... // export an array type
+		... // export a slice type
 	}
 }
 ```
@@ -375,6 +375,7 @@ However, this is not hard job for computers.
 NOTE: implicit contract definition is just one opinion.
 This proposal doesn't exclude explicit contracts.
 In fact it also works well with explicit contracts.
+[Here](contracts.md) is an explicit contract syntax set design.
 
 ## What is the meaningfullness of calling a contract generic in another generic?
 
