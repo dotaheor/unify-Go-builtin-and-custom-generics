@@ -102,17 +102,17 @@ Some more complex ones:
 assure T.methods (
 		.M1 func(string) int
 		.M2 func(..int) (string, error)s
-		Ty.methods
+		Ty.methods // embed a method set
 	)
 assure T.fields (
 		.X int
 		.Y string
-		Tx.fields
+		Tx.fields // embed a field set
 	)
 assure T.selectors (
 		.X int
 		.F func(string) int
-		Tz.selectors
+		Tz.selectors // embed a selector set
 	)
 ```
 
