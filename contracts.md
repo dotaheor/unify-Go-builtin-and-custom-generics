@@ -100,18 +100,18 @@ assure T.selectors.F func(string) int // F can be either a method or field
 Some more complex ones:
 ```
 assure T.methods (
-		M1 func(string) int
-		M2 func(..int) (string, error)s
+		.M1 func(string) int
+		.M2 func(..int) (string, error)s
 		Ty.methods
 	)
 assure T.fields (
-		X int
-		Y string
+		.X int
+		.Y string
 		Tx.fields
 	)
 assure T.selectors (
-		X int
-		F func(string) int
+		.X int
+		.F func(string) int
 		Tz.selectors
 	)
 ```
