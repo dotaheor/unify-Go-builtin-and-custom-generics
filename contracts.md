@@ -1,5 +1,5 @@
 
-This contract propsoal is the planned part of [the generic design](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics).
+This contract propsoal is the planned part of [the generic design](README.md).
 
 
 
