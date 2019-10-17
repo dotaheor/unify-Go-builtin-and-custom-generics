@@ -1,71 +1,61 @@
 
-This contract propsoal is the planned part of [the generic design](README.md).
+This contract propsoal is the planned missing part of [the generic design](README.md).
 
-
-
-There are two kinds of ways to describe a constraint:
-1. use constraint expressions.
-1. through contract calls.
-
-## The `assure` keyword
-
-Each `assure` line describe a constraint (see following section for examples).
-
-_(Other candidates to replace the `assure` keyword: `require`, `must`, etc.)_
+This proposal suggests using some familar expressions used in daily Go programming
+to constraint generic (type and const, etc) parameters.
 
 ## Properties
 
 `type` properties:
 * `T.kind`, means the kind of the type represented by `T`.
 * `T.value`, means an unspecified value of the type represented by `T`.
-* `T.name`, `""` for `T` represents neither a defined type or a type alias.
-* `T.defined`, whether or not the type represetned by `T` represents a defined type.
-   Note: `T.name != "" && !T.defined` is `true` means `T` is a type alias.
+* `T.name`, means the name of the type represented by `T`. `""` for unnamed types.
 * `T.comparable`, whether or not the type represetned by `T` represents a comparable type.
+* `T.embeddable`, whether or not ~~the type represetned by~~ `T` is embeddable.
 * `T.signed`: whether or not the type represetned by `T` is a signed numeric type.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    an integer or floating-point type to use this property.)
-* `T.underlying`: the underlying type of the type represetned by `T`.
 * `T.base`: the base type of the pointer type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a pointer type).
 * `T.key`: the key type of the map type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a map type).
 * `T.element`: the element type of the type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    an array, slice, map, or channel type to use this property.)
+* `T.length`: the length of the array type represetned by `T`.
+   (There must be an aforementioned contract constrainting `T` to represent
+   an array type).
 * `T.receivable`: whether or not the type represetned by `T` represents a receivable channel type.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a channel type).
 * `T.sendable`: whether or not the type represetned by `T` represents a sendable channel type.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a channel type).
 * `T.methsets`: the method set of the type represetned by `T`.
 * `T.fields`: the field set of the type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a struct type).
 * `T.selectors`: the selector set (both methods and fields) of the type represetned by `T`.
 * `T.variadic`: whether or not the type represetned by `T` represents a variadic function type.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a function type).
 * `T.inputs.count`: the number of parameters of the function type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a function type).
 * `T.inputs.0`: the first parameter type of the function type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a function type).
 * `T.outputs.count`: the number of results of the function type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a function type).
 * `T.outputs.0`: the first result type of the function type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
+   (There must be an aforementioned contract constrainting `T` to represent
    a function type).
-* `T.length`: the length of the array type represetned by `T`.
-   (There must be an aforementioned contract constraints `T` to represent
-   an array type).
 
-`const` properties:
+`const` properties (the offical contract draft 2 doesn't support `const` generic parameters now,
+but the proeperties are shown here anyway):
 * `C.name`: the name of the constant represented by `C` is signed.
 * `C.typed`: whether or not the constant represented by `C` is typed.
    (Maybe, it is good to require all generic constants must be typed.)
@@ -74,237 +64,162 @@ _(Other candidates to replace the `assure` keyword: `require`, `must`, etc.)_
 (`var`, `func`, `import` and `gen` can also be used as contract parameters/arguments,
 but doing this will bring much complexity. So this is not supported temporarily.)
 
-## Built-in contract expressions
+Note, the following properties were removed from this propsoal:
+* `T.alias`: in fact, every generic parameter `T` is an alias,
+   and the type represented by `T` is always not an alias,
+   so this property is not essential.
+* `T.underlying`: the property is too fundamental to be much useful and used directly.
+* `T.defined`, same as the above one.
+* `T.receiveonly`: makes the uses of generic arguments verbose.
+* `T.sendonly`: same as the above one.
 
-All contract expressions are built-in. Custom contract expressions are not supported.
+## The `assure` keyword
+
+Each `assure` line describe a constraint, or a mini contract. (See following sections for examples).
+
+_(Other candidates to replace the `assure` keyword: `require`, `must`, `assert`, etc.)_
+
+Syntax
+```
+assure expression
+```
+
+The proposed syntax is mainly to describe the following example purpose.
+It can be another better form.
+
+Not all expessions used the following examples are valid expressions used in daily Go programming. Please read the comments to get their meanings
+
+## Constrain examples
 
 Simple ones:
 ```
-assure T.defined
+// T must represent a comparable type.
 assure T.comparable
-assure N > M // N and M must be two generic consts.
+
+// Same as the above one.
+assure T.value == T.value
+
+// N and M must be two consts (either generic parameters not not).
+assure N > M
+
+// T must represent an array type which length is not smaller than 8.
+assure T.kind == [0]int.kind && T.length >= 8
+
+// T1, T2 and T3 must represent the same type.
+assure T1 == T2 == T3
 ```
 
-Specify the type represetned by `T` muse have a specified method:
+More complex ones:
 ```
+// Tx must represent a pointer type, Ty must represent a map type,
+// and the values of the base type of Tx are assignable and comparable
+// to values of the element type of Ty.
+assure Tx.kind == (*int).kind
+assure Ty.kind == (map[int]int).kind
+assure Ty.element.value = Tx.base.value
+assure Ty.element.value == Tx.base.value
+
+// Ta must represent a slice type, Tb must represent a receiveable
+// channel type, and values of the element type of Tb are convertiable
+// to values of the element type of Ta.
+assure Ta.kind == ([]int).kind && Tb.kind == (chan int).kind
+asusre Tb.receivable
+assure Ta.element(Tb.element.value)
+```
+
+More:
+```
+// Specify the type represetned by T must have a specified method.
 assure T.methods.M func(string) int
-```
 
-Specify the struct type represetned by `T` muse have a specified field:
-```
+// Specify the struct type represetned by T must have a specified field.
 assure T.fields.X int
-```
 
-Specify the type represetned by `T` muse have a specified selector:
-```
+// Specify the type represetned by T must have two specified selectors.
 assure T.selectors.X int
 assure T.selectors.F func(string) int // F can be either a method or a field of a function type
-```
 
-Some more complex ones:
-```
-assure T.methods (
+// Some more complex ones:
+assure T.methods {
 		.M1 func(string) int
 		.M2 func(..int) (string, error)
-		Ty.methods // embed a method set
-	)
-assure T.fields (
+		Ty.methods // embed a method set (a.k.a., T implements Ty)
+	}
+assure T.fields {
 		.X int
 		.Y string
 		Tx.fields // embed a field set
-	)
-assure T.selectors (
+	}
+assure T.selectors {
 		.X int
 		.F func(string) int
 		Tz.selectors // embed a selector set
-	)
-```
-
-## Built-in contract calls
-
-#### `comparable[Tx, Ty type]`
-
-Whether the values of the input types are comparable with each other.
-
-Examples:
-```
-assure comparable[Ta, Tb]
-assure comparable[Tx.base, map[Ty]int]
-```
-
-Or (good or bad):
-```
-assure Ta.value == Tb.value
-```
-
-#### `assignable[Td, Ts type]`
-
-Whether the values of `Ts` can be assigned to type `Td`.
-
-Examples:
-```
-assure assignable[[]int, Ta]
-assure assignable[interface{M()}, Tx]
-```
-
-Or (good or bad):
-```
-assure Ta.value = Tb.value
-```
-
-#### `convertible[Td, Ts type]`
-
-Whether the values of `Ts` can be converted to type `Td`.
-
-Examples:
-```
-assure convertible[[]int, Ta]
-assure convertible[interface{M()}, Tx]
-```
-
-Or (good or bad):
-```
-assure _ = Ta(Tb.value)
-```
-
-#### identical[Tx, Ty, T ...type]
-
-Whether or not the input types are identical types.
-
-For example,
-```
-assure identical[Tx.base, Ty.element, Tz.key]
-```
-
-Or (good or bad):
-```
-assure Ta == Tb == Tc
-```
-
-#### distinct[Tx, Ty, T ...type]
-
-Whether or not the input types are distinct types.
-
-For example,
-```
-assure distinct[Tx.element, Ty.inputs.0, Tz.outputs.1]
-```
-
-Or (good or bad):
-```
-assure Ta != Tb != Tc
-```
-
-#### sameKind[Tx, Ty, T ...type]
-
-Whether or not the input types belong to the same kind.
-
-For example,
-```
-assure sameKind[map[any]any, Tx, Ty]
-```
-
-Here, let's suppose [`any` is an alias of `interface{}`](https://github.com/golang/go/issues/33232).
-
-Or (good or bad):
-```
-assure Ta.kind == Tb.kind == Tc.kind
-```
-
-
-#### anyKind[Tx type, Ts ...type]
-
-Whether or not first input type is any kind of the kinds of the following input types.
-
-For example,
-```
-assure anyKind[Ta]                     // Ta can be any kind
-assure anyKind[Tx, string]             // Tx must be of string kind
-assure anyKind[Ty, string, int, int64] // Ty can be any of string, int or int64 kind
-```
-
-Or (good or bad):
-```
-assure Ta.kind == Tb.kind || Ta.kind == Tc.kind
-```
-
-#### `implements[Tx, Ty type]`
-
-Whether the type represented by `Tx` implements the interface type represented by `Ty`.
-
-Examples:
-```
-assure implements[Ta, interface{M1()}]
-assure implements[Ta.element, Tm.key]
-```
-
-This contract is a little overlapping with the `T.methods` expression mentioned above. For example,
-```
-assure Ta.methods (
-		interface{M1()}.methods
-	)
-assure Ta.element.methods (
-		Tm.key.methods
-	)
-```
-
-## Custom contract calls
-
-Custom `gen` declarations can be used as custom contracts.
-
-An Example:
-```
-gen Min(T type) func {
-	assure T.comparable // or: assure comparable[T, T]
-	
-	func Min(x, t T) T {
-		if x < y {
-			return x
-		} else {
-			return y
-		}
 	}
-}
-
-gne Max(T type) func {
-	assure Min[T] // Apply the contract of the Min gen to the Max gen.
-	              // The effect is the same as appending all the assure
-		      // lines in the Min gen to the Max gen.
-	
-	func Max(x, t T) T {
-		if x > y {
-			return x
-		} else {
-			return y
-		}
-	}
-}
 ```
 
-In fact, a no-outputs `gen` is totally for constraints definition purpose.
+## Intermediate type declarations can show up between lines
+
+For convenience, some intermediate types are allowed to declared between assure lines.
+For example:
 ```
-gen ConditionSet[Tx, Ty, Tz type] {
-	type S = []Tx
-	assure assignable[S, Ty]
-	assure sameKind(Tz, func()]
-	type M struct {Y Ty}
-	assure convertible[Tz.inputs.0, M]
-	// ... more conditions
+assure T.kind == (map[int]int).kind
+type K, E = T.key, T.element
+type I interface {
+	M1() []K
+	M2(E) bool
 }
+type S struct {
+	Name string
+	Keys []K
+}
+assure T.methods { I.methods }
+assure T.fields { S.field }
 ```
 
-The `ConditionSet` `gen` can be called in other `gen` declartions to constraint some types.
+## More thinking
+
+### Built-in contracts?
+
+Perhaps, it is good to predeclare some built-in named contracts to make some constraints
+less verbose and more readable and standardized.
+For example,
 ```
-gen MyGen[Ta, Tb, Tc, Td] [type] {
-	assure ConditionSet[Tb, Tc, Td]
-	
-	type MyGen struct {
-		A Ta
-		B Tb
-		C Tc
-		D Td
-	}
-}
+assure isArray[T] // isArray is a built-in contract
+// is more readable and standardize than
+assure T.kind == [0]int.kind
+
+assure isInteger[T] && t.signed // isInteger is a built-in contract
+// is more readable and less verbose than
+assure T.kind == int.kind || T.kind == int8.ind || T.kind == int16.kind || T.kind == int32.kind || T.kind == int64.kind
+
+assure sameKind[T1, T2, T3, T4] // sameKind is a built-in contract
+// is less verbose than
+assure T1.kind == T2.kind == T3.kind == T4.kind
+
+assure anyKind[T, T1, T2, T3] // anyKind is a built-in contract
+// is less verbose (but also less readable?) than
+assure T.kind == T1.kind || T.kind == T2.kind || T.kind == T3.kind
+s
+// (BTW, are the following two lines readable?)
+assure T.kind == (T1 || T2 || T3).kind
+assure sameKind[T, T1 || T2 || T3]
 ```
+
+### Allow `assure` lines being used in non-generic code?
+
+Use `assure` lines as assert statements, but only limited to constant expressions, in non-geneirc code. Good?
+
+## Tailored for the contract draft v2
+
+In the above examples, the contract syntax used is defined in [this generic propsoal](README.md).
+For [the offical contract draft 2](https://go.googlesource.com/proposal/+/master/design/go2draft-contracts.md),
+some modifications are needed:
+* the `[]` which encloses generic arguments of built-in contracts should be replaced with `()`.
+* the `assure` lines can be put in `contract` declartion bodies, but it would be better to
+  replace the `assure` keyword with another better way which is more suitable for the draft.
+  For example, an `assure expression` line can be written as `{ expression }`.
+
+
+
 
 
