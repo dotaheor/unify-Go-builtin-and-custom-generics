@@ -370,13 +370,6 @@ func main() {
 Compilers can infer the first generic argument as the element type of `words` or `nums`,
 and infer the second generic argument as the element type of the only parameter (`[]interface{}`) of `fmt.Println`.
 
-## Comparisons between this proposal and the latest official draft
-
-1. Map: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/map.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map.go2) (and [another multi-output version](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map2.go2)).
-1. Set: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/set.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/set.go2).
-
-[More](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/tree/master/examples/src/go).
-
 ## Contracts
 
 Please read [the constraint expressions part](contracts.md) of this proposal for how to write basic generic parameter constraints.
@@ -390,7 +383,7 @@ A `gen` with a blank output acts as a pure contract.
 When using a `gen` as a contract, prefix the `assure` keyword to its call.
 For example, the built-in generic `make` is called as a contract.
 ``` 
-gen Convert [T1, T2 type] func {
+gen Convert [T1 type][T2 type] func {
 	// Constraint T1 must be a slice or map.
 	assure make[T2]
 
@@ -409,6 +402,12 @@ gen Convert [T1, T2 type] func {
 }
 
 ```
+
+## Comparisons between this proposal and the latest official draft
+
+* Map: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/map.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map.go2) (and [another multi-output version](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map2.go2)).
+* Set: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/set.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/set.go2).
+* [More](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/tree/master/examples/src/go).
 
 ## More examples
 
