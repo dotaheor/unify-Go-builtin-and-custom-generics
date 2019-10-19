@@ -87,15 +87,18 @@ gen ConvertSlice[OldElement type][NewElement type] [func] {
 
 // use it
 
-func strings2Interfaces = ConvertSlice[string][interfacce{}] // call the gen and bind the output to a function.
-var _ = ConvertSlice[string][interfacce{}]                   // this is also allowed.
+// Call the gen and bind the output to a function.
+func strings2Interfaces = ConvertSlice[string][interfacce{}]
+// This is also allowed.
+var _ = ConvertSlice[string][interfacce{}]
 
 func main() {
 	words := []string{"hello", "bye"}
 	fmt.Println(strings2Interfaces(words)...)
 	
+	// Call the gen then call the outputted function.
 	nums := []int{1, 2, 3}
-	fmt.Println(ConvertSlice[int][interfacce{}](nums)...) // call the gen then call the output function
+	fmt.Println(ConvertSlice[int][interfacce{}](nums)...)
 }
 ```
 
@@ -128,16 +131,19 @@ gen List[T type] type {
 
 // use it
 
-type BoolList = List[bool] // call the gen then bind the output type to a type alias
+// call the gen then bind the output type to a type alias.
+type BoolList = List[bool]
 
 func main() {
-	var intList List[int] // call the gen then use the output type
+	// Call the gen then use the outputted type.
+	var intList List[int]
 	intList = intList.Push(123)
 	intList = intList.Push(456)
 	intList = intList.Push(789)
 	intList.Dump()
 	
-	var strList List[string] // call the gen then use the output type
+	// Call the gen then use the outputted type.
+	var strList List[string]
 	strList = intList.Push("abc")
 	strList = intList.Push("mno")
 	strList = intList.Push("xyz")
@@ -319,7 +325,7 @@ But `gen`s declared from different packages may not depend on cyclicly.
 
 If we observe builtin generic syntax carefully, we will find that the last generic arguments are not enclosed in `[]`.
 For example: `array[5]int`, `slice[]int`, `map[string]int`, `chan int`.
-(Surely, the `array` and `slice` identifier must be ommited in uses, so below for details.)
+(Surely, the `array` and `slice` identifier must be ommited in uses. This is a builtin generic privilege.)
 
 We can apply this same rule for custom generics.
 For example, for the generic type declared in the above example 2 and 3, their calls may be

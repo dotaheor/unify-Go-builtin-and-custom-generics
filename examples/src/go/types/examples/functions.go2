@@ -76,7 +76,7 @@ var _ float64 = foo(42, []float64{1.0}, &s)
 	
 // Type inference works in a straight-forward manner even
 // for variadic functions.
-gen variadic[A, B type] func {
+gen variadic[A type][B type] func {
     // The only exported function is used as the output of the generic.
     // NOTE: the name of the declared function is not important,
     //       as long as it is exported.
@@ -89,4 +89,5 @@ var _ = variadic(1, 2.3)
 	
 var _ = variadic(1, 2.3, 3.4, 4.5)
 	
-var _ = variadic[int, float64](1, 2.3, 3.4, 4)
+var _ = variadic[int][float64](1, 2.3, 3.4, 4)
+var _ = variadic(int, float64, 1, 2.3, 3.4, 4)

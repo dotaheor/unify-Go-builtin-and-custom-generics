@@ -62,7 +62,7 @@ gen OrderedNumeric[T type][] {
 	
 	
 // Complex matches the two complex types, which do not have a < operator.
-gen Complex[T type] {
+gen Complex[T type][] {
 	assure T.kind == complex64(0i).kind || T.kind == complex128(0i).kind
 }
 	

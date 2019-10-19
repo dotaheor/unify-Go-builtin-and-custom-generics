@@ -1,5 +1,6 @@
 
-This contract propsoal is the planned missing part of [the generic design](README.md).
+This contract proposal is a part of [the generic design](README.md).
+It can also be used with other generic type and function declartion proposals.
 
 This proposal suggests using some familar expressions used in daily Go programming
 to constraint generic (type and const, etc) parameters.
@@ -64,8 +65,8 @@ but the proeperties are shown here anyway):
    (Maybe, it is good to require all generic constants must be typed.)
 * `C.type`: the type or default type of a constant represented by `C`.
 
-(`var`, `func`, `import` and `gen` can also be used as contract parameters/arguments,
-but doing this will bring much complexity. So this is not supported temporarily.)
+_(`var`, `func`, `import` and `gen` can also be used as contract parameters/arguments,
+but doing this will bring much complexity. So this is not supported temporarily.)_
 
 Note, the following properties were removed from this propsoal:
 * `T.alias`: in fact, every generic parameter `T` is an alias,

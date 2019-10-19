@@ -106,7 +106,7 @@ gen Map[K type][V type] import {
 import "strings"
 
 // Assume map is not a keyword.
-import map = Map[string, int]
+import map = Map[string][int]
 
 func f() {
 	var m = map.New(string, int, strings.Compare)

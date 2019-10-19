@@ -10,7 +10,7 @@ gen orderedSlice[Elem type] import { // orderableSlice is a better name
 	// For this specified gen, one type (with 3 methods) and one
 	// funciton will be outputted together in a mini-pacakge.
 
-	type OrderedSlice = []Elem
+	type OrderedSlice []Elem
 	func (s OrderedSlice) Len() int           { return len(s) }
 	func (s OrderedSlice) Less(i, j int) bool { return s[i] < s[j] }
 	func (s OrderedSlice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }

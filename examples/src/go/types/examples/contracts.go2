@@ -21,17 +21,17 @@ gen ( // ERROR
 	
 // A contract specifies methods and types for each of the
 // type parameters it constrains.
-gen Stringer[T type] {
+gen Stringer[T type][] {
 	assure T.methods.String() string
 }
 	
-gen Sequence[T type] {
+gen Sequence[T type][] {
 	assure T.kind == string.kind || T.kind = ([]int).kind
 }
 
 // Contracts may constrain multiple type parameters
 // in mutually recursive ways.
-gen G[Node type][Edge type] {
+gen G[Node type][Edge type][] {
 	assure Node.methods.Edges() []Edge
 	assure Edge.methods.Nodes() (from Node, to Node)
 }
