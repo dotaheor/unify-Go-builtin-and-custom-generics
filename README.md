@@ -48,6 +48,9 @@ In this form,
 * the `[inN InputElemKindN]` portions are the inputs.
   Except the first one, the others are optional but they are may not be blank `[]`.
   The first one `[in0 InputElemKind0]` may be blank `[]`, but it is not optional.
+  
+
+_(Note: the syntax used in the current version is a little different from [older versions](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/tree/890bb969383a8c11a7f17308de8a4020488aeb0f).)_
 
 Please don't be frighten by the new syntax. Their uses are much simpler and intuiative than it looks.
 At this point, we just need to know that a `gen` declaration is like a function declaration and we can call it to use it.
@@ -340,7 +343,7 @@ var y = new(string)   // same as Go 1
 
 var m1 = make[map[int]string]() // different from Go 1
 var s1 = make[[]int](100)       // different from Go 1
-var m2 = make(map[intstring)    // same as Go 1
+var m2 = make(map[int]string)   // same as Go 1
 var s2 = make([]int, 100)       // same as Go 1
 ```
 
