@@ -24,8 +24,6 @@ personally, I think this proposal has the following advantages:
 Now, there are 5 kinds of code element declarations (except labels) in Go: `var`, `const`, `func`, `type`, and `import`.
 This solution adds a new one `gen`, which means a generic declaration.
 
-In the following examples, the generic input constraints are ignored.
-
 The form for exported generic declartions looks like:
 ```
 gen GenName[in0 InputElemKind0][in1 InputElemKind1] ... [inN InputElemKindN] [out OutputElemKind] {
