@@ -1,7 +1,7 @@
 package slices
 	
 // Map turns a []T1 to a []T2 using a mapping function.
-gen Map[T1, T2 type] func {
+gen Map[T1 type][T2 type] func {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
@@ -16,7 +16,7 @@ gen Map[T1, T2 type] func {
 }
 
 // Reduce reduces a []T1 to a single value using a reduction function.
-gen Reduce[T1, T2 type] func {
+gen Reduce[T1 type][T2 type] func {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
@@ -31,7 +31,7 @@ gen Reduce[T1, T2 type] func {
 }
 
 // Filter filters values from a slice using a filter function.
-gen Filter[T type]s func {
+gen Filter[T type] func {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.

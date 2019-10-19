@@ -1,9 +1,7 @@
 package sort
 
 gen orderedSlice[Elem type] import { // orderableSlice is a better name
-	comparable[Elem] // apply an extra contract. comparable is a built gen (contract).
-	                 // In fact, this call can be removed, for the following code
-	                 // has made the requirement already.
+	assure Elem.comparable // apply an extra contract
 	
 	// For a gen which ouputs an import, all the exported types
 	// and functions declared in the gen body will be outputted,

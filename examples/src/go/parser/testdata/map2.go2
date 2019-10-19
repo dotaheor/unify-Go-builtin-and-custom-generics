@@ -2,7 +2,7 @@ package orderedmap
 	
 import "chans"
 
-gen Map[K, V type] import {
+gen Map[K type][V type] import {
 
 	type KeyValue struct {
 		key K
@@ -105,10 +105,11 @@ gen Map[K, V type] import {
 
 import "strings"
 
+// Assume map is not a keyword.
 import map = Map[string, int]
 
 func f() {
-	var m = map.New[string, int](strings.Compare)
+	var m = map.New(string, int, strings.Compare)
 	m.Insert("abc", 1)
 	m.Insert("def", 2)
 	var n, ok = m.Find("abc")

@@ -3,7 +3,7 @@ package metrics
 import "sync"
 
 gen Metric1[T type] type {
-	comparable[T] // apply an extra contract
+	assure T.comparable // apply an extra contract
 
 	// The only exported type is used as the output of the generic.
 	// NOTE: the name of the declared type is not important,
@@ -23,13 +23,13 @@ gen Metric1[T type] type {
 	}
 }
 
-gen cmp2[T1, T2 type] {
-	comparable[T1]
-	comparable[T2]
+gen cmp2[T1 type][T2 type][] {
+	assumre T1.comparable
+	assumre T2.comparable
 }
 
 gen key2[T1, T2 type] type {
-	cmp2[T1, T2] // apply an extra contract
+	assure cmp2[T1][T2] // apply an extra contract
 
 	// The only exported type is used as the output of the generic.
 	// NOTE: the name of the declared type is not important,
@@ -41,11 +41,9 @@ gen key2[T1, T2 type] type {
 }
 
 gen Metric2[T1, T2 type] type {
-	cmp2[T1, T2] // apply an extra contract.
-	             // In fact, this call can be removed, for the following code
-	             // has made the requirement already.
+	assure cmp2[T1][T2] // apply an extra contract.
 	
-	type tkey = key2[T1, T2] // must be unexported
+	type tkey = key2[T1][T2] // must be unexported
 	
 	// The only exported type is used as the output of the generic.
 	// NOTE: the the name of declared type is not important,
@@ -65,15 +63,14 @@ gen Metric2[T1, T2 type] type {
 	}
 }
 
-gne cmp3[T1, T2, T3 type] {
-	comparable[T1]
-	comparable[T2]
-	comparable[T3]
-	
+gen cmp3[T1 type][T2 type][T3 type][] {
+	assumre T1.comparable
+	assumre T2.comparable
+	assumre T3.comparable
 }
 
-gen key3[T1, T2, T3 type] type {
-	cmp3[T1, T2, T3] // apply an extra contract
+gen key3[T1 type][T2 type][T3 type] type {
+	assure cmp3[T1][T2][T3] // apply an extra contract
     
 	// The only exported type is used as the output of the generic.
 	// NOTE: the name of the declared type is not important,
@@ -85,12 +82,10 @@ gen key3[T1, T2, T3 type] type {
 	}
 }
 
-gen Metric3[T1, T2, T3 type] type {
-	cmp3[T1, T2, T3] // apply an extra contract.
-	                 // In fact, this call can be removed, for the following code
-	                 // has made the requirement already.
+gen Metric3[T1 type][T2 type][T3 type]type {
+	assure cmp3[T1][T2][T3] // apply an extra contract.
 	
-	type key = key3[T1, T2, T3] // must be unepxorted
+	type key = key3[T1][T2][T3] // must be unepxorted
 	
 	// The only exported type is used as the output of the generic.
 	// NOTE: the name of the declared type is not important,

@@ -1,7 +1,7 @@
 package set
 
 gen Set[Elem type] type {
-	comparable[Elem] // apply an extra contract
+	assure Elem.comparable[Elem] // apply an extra contract
 
 	// The only exported type is used as the output of the generic.
 	// NOTE: the name of the declared type is not important,
@@ -30,6 +30,8 @@ gen Set[Elem type] type {
 }
 
 gen Make[Elem type] func {
+	assure Set[Elem]
+
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.

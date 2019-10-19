@@ -10,6 +10,7 @@ to constraint generic (type and const, etc) parameters.
 * `T.kind`, means the kind of the type represented by `T`.
 * `T.value`, means an unspecified value of the type represented by `T`.
 * `T.name`, means the name of the type represented by `T`. `""` for unnamed types.
+* `T.orderable`, whether or not the values of the type represetned by `T` can be compared with `<` and `>`, etc.
 * `T.comparable`, whether or not the type represetned by `T` represents a comparable type.
 * `T.embeddable`, whether or not ~~the type represetned by~~ `T` is embeddable.
 * `T.signed`: whether or not the type represetned by `T` is a signed numeric type.
@@ -20,7 +21,8 @@ to constraint generic (type and const, etc) parameters.
    a pointer type).
 * `T.key`: the key type of the map type represetned by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
-   a map type).
+   a map, slice, array or string type. If `T` is a slice, array or string type,
+   then `T.key` is `int`).
 * `T.element`: the element type of the type represetned by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    an array, slice, map, or channel type to use this property.)
@@ -57,6 +59,7 @@ to constraint generic (type and const, etc) parameters.
 `const` properties (the offical contract draft 2 doesn't support `const` generic parameters now,
 but the proeperties are shown here anyway):
 * `C.name`: the name of the constant represented by `C` is signed.
+   The value might be `""` for intermediate values, such as `T.length.name`.
 * `C.typed`: whether or not the constant represented by `C` is typed.
    (Maybe, it is good to require all generic constants must be typed.)
 * `C.type`: the type or default type of a constant represented by `C`.
@@ -190,7 +193,7 @@ assure T.kind == [0]int.kind
 
 assure isInteger[T] && t.signed // isInteger is a built-in contract
 // is more readable and less verbose than
-assure T.kind == int.kind || T.kind == int8.ind || T.kind == int16.kind || T.kind == int32.kind || T.kind == int64.kind
+assure T.kind == int.kind || T.kind == int8.kind || T.kind == int16.kind || T.kind == int32.kind || T.kind == int64.kind
 
 assure sameKind[T1, T2, T3, T4] // sameKind is a built-in contract
 // is less verbose than

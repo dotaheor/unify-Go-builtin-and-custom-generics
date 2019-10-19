@@ -10,7 +10,7 @@ import "runtime"
 //
 // This is a convenient way to exit a goroutine sending values when
 // the receiver stops reading them.
-gne Ranger[T type] func {
+gen Ranger[T type] func {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.

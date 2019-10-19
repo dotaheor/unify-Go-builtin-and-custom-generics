@@ -1,6 +1,6 @@
 package p
 
-gen Reverse (T type) func {
+gen Reverse [T type] func {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
@@ -15,28 +15,10 @@ gen Reverse (T type) func {
 	}
 }
 
-/*
-Note: by the following changes to the proposal:
-* Some simple single output gens can be simplified
-  https://github.com/dotaheor/unify-Go-builtin-and-custom-generics#some-somple-single-output-gens-can-be-simplified
-
-the abvoe gen can also be declared as
-
-gen Reverse (T type) func (list []T) {
-	i := 0
-	j := len(list)-1
-	for i < j {
-		list[i], list[j] = list[j], list[i]
-		i++
-		j--
-	}
-}
-*/
-
 func _() {
-	Reverse[int](nil)
-	Reverse[string]([]string{"foo", "bar"})
-	Reverse[struct{x, y int}]([]struct{x, y int}{{1, 2}, {2, 3}, {3, 4}})
+	Reverse(int, nil)
+	Reverse(string, []string{"foo", "bar"})
+	Reverse(struct{x, y int}, []struct{x, y int}{{1, 2}, {2, 3}, {3, 4}})
 	
 	// Since the type parameter is used for an incoming argument,
 	// it can be inferred from the provided argument's type.
@@ -54,17 +36,13 @@ func _() {
 // Certain functions, such as the built-in `new` could be written using
 // type parameters.
 gen new [T type] func {
-	func f() *T {
-		var x T
-		return &x
-	}
-
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
 	//       Here it must be an exported identifer.
 	func New() *T {
-		return f()
+		var x T
+		return &x
 	}
 }
 
@@ -79,7 +57,7 @@ var _ = new[int]()
 var _ *float64 = new[float64]() // the result type is indeed *float64
 
 // A function may have multiple type parameters, of course.
-gen foo [A, B, C type] func {
+gen foo [A type][B type][C type] func {
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.

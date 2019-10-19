@@ -3,55 +3,41 @@ package p
 // A pure contracts can viewed as a `gen` without any output.
 
 // A contract requires a type has a specified method.	
-gen C[T type] {
-	var x T
-	var _ interface {
-		m()
-	} = x
+gen C[T type][] {
+	assure T.methods.m()
 }
 	
 // Contracts may be empty.
-gen Empty[] {}
+gen Empty[][] {}
 	
 	
 // Like functions, contracts (gens) may not be grouped.
 gen ( // ERROR 
-	C1[T] {} // ERROR 
-	C2[T] {} // ERROR 
-	C3[T] {} // ERROR 
+	C1[T][] {} // ERROR 
+	C2[T][] {} // ERROR 
+	C3[T][] {} // ERROR 
 )
 	
 	
 // A contract specifies methods and types for each of the
 // type parameters it constrains.
 gen Stringer[T type] {
-	var x T
-	var _ interface {
-		String() string
-	} = x
+	assure T.methods.String() string
 }
 	
 gen Sequence[T type] {
-	var x T
-	var _ T = x[:]
+	assure T.kind == string.kind || T.kind = ([]int).kind
 }
 
 // Contracts may constrain multiple type parameters
 // in mutually recursive ways.
-gen G[Node, Edge type] {
-	var n Node
-	var _ interface {
-		Edges() []Edge
-	} = n
-	
-	var e Edge
-	var _ interface {
-		Nodes() (from Node, to Node)
-	} = e
+gen G[Node type][Edge type] {
+	assure Node.methods.Edges() []Edge
+	assure Edge.methods.Nodes() (from Node, to Node)
 }
 
-gen Graph [Node, Edge type] import {
-	G[Node, Edge] // apply an extra contract
+gen Graph [Node type][Edge type] import {
+	assure G[Node][Edge] // apply an extra contract
 
 	// For a gen which ouputs an import, all the exported types
 	// and functions declared in the gen body will be outputted,
@@ -62,7 +48,7 @@ gen Graph [Node, Edge type] import {
 
 	type Graph struct { /* ... */ }
 
-	func New(nodes []Node) *Graph(Node, Edge) { panic("unimplemented") }
+	func New(nodes []Node) *Graph { panic("unimplemented") }
 
 	func ShortestPath(from, to Node) []Edge { panic("unimplemented") }
 }
