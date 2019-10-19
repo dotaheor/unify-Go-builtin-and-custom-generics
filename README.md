@@ -26,8 +26,6 @@ This solution adds a new one `gen`, which means a generic declaration.
 
 In the following examples, the generic input constraints are ignored.
 
-There are two generic declartion forms, one is for exported generic declartions, the other is for non-exported ones.
-
 The form for exported generic declartions looks like:
 ```
 gen GenName[in0 InputElemKind0][in1 InputElemKind1] ... [inN InputElemKindN] [out OutputElemKind] {
@@ -35,7 +33,7 @@ gen GenName[in0 InputElemKind0][in1 InputElemKind1] ... [inN InputElemKindN] [ou
 }
 ```
 
-In this form,
+In the form,
 * each `ElemKind` can be any of `var`, `const`, `func`, `type`, `import`, and `gen`.
   However, `var` inputs and outputs are almost never used for it is not much useful.
   `func` and `import` inputs are also not very useful. `const` outputs are also not very useful.
