@@ -51,7 +51,10 @@ In this form,
 
 Please don't be frighten by the new syntax. Their uses are much simpler and intuiative than it looks.
 At this point, we just need to know that a `gen` declaration is like a function declaration and we can call it to use it.
-The difference is the parameters and results of a generic declaration are all code element kinds, instead of value types.
+The differences are
+* the parameters and results of a generic declaration are all code element kinds, instead of value types.
+* generic parameters and results are enclosed in `[]` instead of `()`.
+* each generic input parameter is enclosed in a separated `[]`.
 
 Let's view some simple examples to get how to declare and use generics.
 
@@ -313,7 +316,7 @@ But `gen`s declared from different packages may not depend on cyclicly.
 
 (Note, this part of the design is still very not mature.)
 
-### For a `gen` with single `type` output, in its calls, the [] surrounding the last generic arguments may be omitted
+### For a `gen` with single `type` output, in its calls, the `[]` surrounding the last generic arguments may be omitted
 
 If we observe builtin generic syntax carefully, we will find that the last generic arguments are not enclosed in `[]`.
 For example: `array[5]int`, `slice[]int`, `map[string]int`, `chan int`.
