@@ -94,6 +94,10 @@ Syntax
 assure expression
 ```
 
+* if `expression` is a boolean, it must be true to pass the checking.
+* if `expression` is an integer, it must be non-zero to pass the checking.
+* if `expression` is a supposed fact, the fact must exit to pass the checking.
+
 The proposed syntax is mainly to describe the following example purpose.
 It can be another better form.
 
