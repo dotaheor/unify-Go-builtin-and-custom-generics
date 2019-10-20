@@ -9,7 +9,7 @@ to constraint generic (type and const, etc) parameters.
 
 `type` properties:
 * `T.kind`, means the kind of the type represented by `T`.
-* `T.value`, means an unspecified value of the type represented by `T`.
+* `T.value`, means an unspecified (addressable) value of the type represented by `T`.
 * `T.name`, means the name of the type represented by `T`. `""` for unnamed types.
 * `T.signed`: whether or not the type represetned by `T` is a signed numeric type.
    (Not a very elementary property.
@@ -105,7 +105,7 @@ assure T.comparable
 // Same as the above one.
 assure T.value == T.value
 
-// N and M must be two consts (either generic parameters not not).
+// N and M must be two consts (either generic parameters or not).
 assure N > M
 
 // T must represent an array type which length is not smaller than 8.

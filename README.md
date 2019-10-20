@@ -14,11 +14,11 @@ and using a `gen` is much like calling a function, which makes the proposal very
 
 Comparing to the current official generic/contract draft,
 personally, I think this proposal has the following advantages:
-1. supports const generic parameters (the draft only supports types now).
 1. consistent looking of builtin and custom generics.
 1. the main part of the declaration syntax of generic types and functions is totally Go 1 compatible.
-1. uses generics is much like calling functions, so it is easy to understand.
-1. avoid the cumbersome feeling of generic function and type declarations.
+1. using generics is much like calling functions, so it is easy to understand.
+1. avoids the cumbersome feeling of generic function and type declarations.
+1. supports const generic parameters (the draft only supports types now).
 
 ## The generic declaration syntax
 
@@ -316,13 +316,7 @@ gen make[T type] func {
 
 ## More about generic calls
 
-### Cyclic calls between `gen`s declared in the same package are allowed
-
-But `gen`s declared from different packages may not depend on cyclicly.
-
-(Note, this part of the design is still very not mature.)
-
-### For a `gen` with single `type` output, in its calls, the `[]` surrounding the last generic arguments may be omitted
+### For a `gen` with single `type` output, in its calls, the `[]` surrounding the last generic arguments may be omitted.
 
 If we observe builtin generic syntax carefully, we will find that the last generic arguments are not enclosed in `[]`.
 For example: `array[5]int`, `slice[]int`, `map[string]int`, `chan int`.
@@ -337,7 +331,7 @@ type stringIntTreeMap = TreeMap[string]int
 
 (Is it good to make this rule mandatory?)
 
-### For a `gen` with single `func` output, in its calls, the generic arguments may be inserted (at the beginning) into general argument list
+### For a `gen` with single `func` output, in its calls, the generic arguments may be inserted (at the beginning) into general argument list.
 
 For example, the built-in `new` and `make` generic, they may be called with two forms:
 ```
@@ -375,6 +369,43 @@ func main() {
 
 Compilers can infer the first generic argument as the element type of `words` or `nums`,
 and infer the second generic argument as the element type of the only parameter (`[]interface{}`) of `fmt.Println`.
+
+### Cyclic calls between `gen`s declared in the same package are allowed.
+
+But `gen`s declared from different packages may not cyclicly depend on.
+This is not a problem, since cyclic package dependencies are disallowed.
+
+A `gen` may call itself:
+```
+gen G [T type] type {
+	// Here, to avoid ambiguities, the only exported type
+	// should not be named as the enclosing generic.
+	type Exported struct {
+		X *G[int]
+	}
+}
+```
+
+### Generic type arguments are passed by aliases, the outputted types of `gen` calls are also aliases.
+
+In the following example, type `MyInt` is an alias of the built-in type `int`.
+```
+gen G[T type] type {
+	type G = T
+}
+
+type MyInt = G[int]
+```
+
+
+
+A `gen` can only reference other `gen`s declared in the same package.
+It may not reference other elements, such as package-level functions and types, declared in the same package.
+
+
+
+Each `gen` instance (a.k.a., the output of a `gen` call) is viewed as mini sub-package in the package that `gen` is declared in.
+
 
 ## Contracts
 
