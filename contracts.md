@@ -11,12 +11,14 @@ to constraint generic (type and const, etc) parameters.
 * `T.kind`, means the kind of the type represented by `T`.
 * `T.value`, means an unspecified value of the type represented by `T`.
 * `T.name`, means the name of the type represented by `T`. `""` for unnamed types.
+* `T.signed`: whether or not the type represetned by `T` is a signed numeric type.
+   (Not a very elementary property.
+   There must be an aforementioned contract constrainting `T` to represent
+   an integer or floating-point type to use this property.)
 * `T.orderable`, whether or not the values of the type represetned by `T` can be compared with `<` and `>`, etc.
+   (Not a very elementary property).
 * `T.comparable`, whether or not the type represetned by `T` represents a comparable type.
 * `T.embeddable`, whether or not ~~the type represetned by~~ `T` is embeddable.
-* `T.signed`: whether or not the type represetned by `T` is a signed numeric type.
-   (There must be an aforementioned contract constrainting `T` to represent
-   an integer or floating-point type to use this property.)
 * `T.base`: the base type of the pointer type represetned by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a pointer type).
@@ -81,7 +83,7 @@ Note, the following properties were removed from this propsoal:
 
 Each `assure` line describe a constraint, or a mini contract. (See following sections for examples).
 
-_(Other candidates to replace the `assure` keyword: `require`, `must`, `assert`, etc.)_
+_(Other candidates to replace the `assure` keyword: `ensure`, `require`, `must`, `assert`, etc.)_
 
 Syntax
 ```
@@ -182,11 +184,27 @@ assure T.fields { S.field }
 
 ## More thinking
 
+### Allow `assure` lines being used in non-generic code?
+
+Use `assure` lines as assert statements, but only limited to constant expressions, in non-geneirc code. Good?
+
+### Built-in non-elementary properties?
+
+In fact, the above listed properties `T.orderable` and `T.signed` are not very elementary.
+There are more such non-elementary properties: `T.addable`, `T.subtractable`, `T.remaindable`,
+`T.numeric`, `T.interger`, `T.floatingpoint`, `T.complex`, etc.
+
+Good to add these ones? Or use the following introduced built-in contracts instead? 
+
 ### Built-in contracts?
 
 Perhaps, it is good to predeclare some built-in named contracts to make some constraints
 less verbose and more readable and standardized.
-For example,
+
+For example, `isNumeric[T]`, `isFloatingPoint[T]` and  `isInteger[T]` are more readable than
+`T.numeric`, `T.floatingpoint` and `T.interger`, respectively.
+
+More examples:
 ```
 assure isArray[T] // isArray is a built-in contract
 // is more readable and standardize than
@@ -203,15 +221,37 @@ assure T1.kind == T2.kind == T3.kind == T4.kind
 assure anyKind[T, T1, T2, T3] // anyKind is a built-in contract
 // is less verbose (but also less readable?) than
 assure T.kind == T1.kind || T.kind == T2.kind || T.kind == T3.kind
-s
+
 // (BTW, are the following two lines readable?)
 assure T.kind == (T1 || T2 || T3).kind
 assure sameKind[T, T1 || T2 || T3]
 ```
 
-### Allow `assure` lines being used in non-generic code?
+### Built-in kinds?
 
-Use `assure` lines as assert statements, but only limited to constant expressions, in non-geneirc code. Good?
+The expression `T.kind == [0]int.kind` might be readable enough, but the `[0]int` in it
+adds some irrelevant noises and might cuase some misleading.
+
+Is it good to view `kind`s as integer values and predeclared all the kinds like
+```
+const (
+	Bool = 1 << iota
+	Int
+	Uint
+	...
+	Pointer
+	Array
+	Slice
+	Map
+	Channel
+	Interface
+	...
+)
+```
+?
+
+Then the expression `T.kind == [0]int.kind` can be re-written as `T.kind == Array`,
+which is more clean and readable.
 
 ## Tailored for the contract draft v2
 
