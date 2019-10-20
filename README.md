@@ -18,6 +18,7 @@ personally, I think this proposal has the following advantages:
 1. consistent looking of builtin and custom generics.
 1. the main part of the declaration syntax of generic types and functions is totally Go 1 compatible.
 1. uses generics is much like calling functions, so it is easy to understand.
+1. avoid the cumbersome feeling of generic function and type declarations.
 
 ## The generic declaration syntax
 
