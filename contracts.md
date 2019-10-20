@@ -5,6 +5,10 @@ It can also be used with other generic type and function declartion proposals.
 This proposal suggests using some familar expressions used in daily Go programming
 to constraint generic (type and const, etc) parameters.
 
+Personally, I think this design combines the advantages of the contract draft v1 and v2.
+* v1: prone to change constraints accidentally, non-precise, ambiguities existing, but almost possibility complete.
+* v2: formal, precise, but possibility limited.
+
 ## Properties
 
 `type` properties:
