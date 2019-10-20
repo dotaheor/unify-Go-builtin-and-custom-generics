@@ -194,7 +194,7 @@ In fact, the above listed properties `T.orderable` and `T.signed` are not very e
 There are more such non-elementary properties: `T.addable`, `T.subtractable`, `T.remaindable`,
 `T.numeric`, `T.interger`, `T.floatingpoint`, `T.complex`, etc.
 
-Good to add these ones? Or use the following introduced built-in contracts instead? 
+Good to add these ones? Or use the following introduced built-in contracts or kinds instead? 
 
 ### Built-in contracts?
 
@@ -246,12 +246,31 @@ const (
 	Channel
 	Interface
 	...
+	Integer =       Int || Uint || ... || Uintptr
+	Signed =        Int || Int8 || Int16 || Int32 || Int64
+	Unsgined =      Uint || Uint8 || Uint16 || Uint32 || Uint64 || Uintptr
+	FloatingPoint = Float32 || Float64
+	Complex =       Complex64 || Complex128
 )
 ```
 ?
 
-Then the expression `T.kind == [0]int.kind` can be re-written as `T.kind == Array`,
+Then the expression `T.kind == [0]int.kind` may be re-written as `T.kind == Array`,
 which is more clean and readable.
+
+More examples:
+```
+assure T.kind == int.kind || T.kind == int8.kind || T.kind == int16.kind || T.kind == int32.kind || T.kind == int64.kind
+// may be re-written as
+assure T.kind == Signed
+// The operation is not totally the same as that in general Go programming.
+// It meas "T.kind & Signed != 0" in general Go programming.
+
+assure T.kind == T1.kind || T.kind == T2.kind || T.kind == T3.kind
+// may be re-written as
+assure T.kind == T1.kind | T.kind == T2.kind | T.kind == T3.kind
+// which is not much different but a little more reasonable.
+```
 
 ## Tailored for the contract draft v2
 
