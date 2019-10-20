@@ -268,8 +268,7 @@ assure T.kind == Signed
 
 assure T.kind == T1.kind || T.kind == T2.kind || T.kind == T3.kind
 // may be re-written as
-assure T.kind == T1.kind | T.kind == T2.kind | T.kind == T3.kind
-// which is not much different but a little more reasonable.
+assure T.kind == T1.kind | T2.kind | T3.kind
 ```
 
 ## Tailored for the contract draft v2
