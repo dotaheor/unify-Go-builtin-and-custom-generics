@@ -252,6 +252,7 @@ const (
 	FloatingPoint = Float32 || Float64
 	Complex =       Complex64 || Complex128
 	Numeric =       Integer || FloatingPoint || Complex
+	Orderable =     Integer || FloatingPoint || String
 	Addable =       String || Numeric
 )
 ```

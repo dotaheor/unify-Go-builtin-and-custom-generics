@@ -53,8 +53,10 @@ gen new [T type] func {
 // easy to understand.
 	
 var _ = new[int]()
+var _ = new(int)
 	
 var _ *float64 = new[float64]() // the result type is indeed *float64
+var _ *float64 = new(float64)
 
 // A function may have multiple type parameters, of course.
 gen foo [A type][B type][C type] func {
