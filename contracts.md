@@ -163,7 +163,7 @@ assure T.selectors {
 	}
 ```
 
-## Intermediate type declarations can show up between lines
+## Intermediate type declarations can show up between `assure` lines
 
 For convenience, some intermediate types are allowed to declared between assure lines.
 For example:
