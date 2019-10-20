@@ -191,8 +191,7 @@ Use `assure` lines as assert statements, but only limited to constant expression
 ### Built-in non-elementary properties?
 
 In fact, the above listed properties `T.orderable` and `T.signed` are not very elementary.
-There are more such non-elementary properties: `T.addable`, `T.subtractable`, `T.remaindable`,
-`T.numeric`, `T.interger`, `T.floatingpoint`, `T.complex`, etc.
+There are more such non-elementary properties: `T.addable`, `T.numeric`, `T.interger`, `T.floatingpoint`, `T.complex`, etc.
 
 Good to add these ones? Or use the following introduced built-in contracts or kinds instead? 
 
@@ -236,6 +235,7 @@ Is it good to view `kind`s as integer values and predeclared all the kinds like
 ```
 const (
 	Bool = 1 << iota
+	String
 	Int
 	Uint
 	...
@@ -246,11 +246,13 @@ const (
 	Channel
 	Interface
 	...
-	Integer =       Int || Uint || ... || Uintptr
 	Signed =        Int || Int8 || Int16 || Int32 || Int64
 	Unsgined =      Uint || Uint8 || Uint16 || Uint32 || Uint64 || Uintptr
+	Integer =       Signed || Unsgined
 	FloatingPoint = Float32 || Float64
 	Complex =       Complex64 || Complex128
+	Numeric =       Integer || FloatingPoint || Complex
+	Addable =       String || Numeric
 )
 ```
 ?
