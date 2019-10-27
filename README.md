@@ -15,10 +15,11 @@ and using a `gen` is much like calling a function, which makes the proposal very
 Comparing to the current official generic/contract draft,
 personally, I think this proposal has the following advantages:
 1. consistent looking of builtin and custom generic calls.
-1. the main part of the declaration syntax of generic types and functions is totally Go 1 compatible.
+1. the delcarations generic of generic types and generic functions are totally Go 1 compatible.
 1. using generics is much like calling functions, so it is easy to understand.
-1. avoids the ~~cumbersome~~ crowded feeling of generic function and type declarations.
-1. suport generic packages (not only generic functions and types).
+1. avoids the ~~cumbersome~~ crowded feeling of generic function and type declarations, and removes many code duplications.
+   Both of the two are important for a better code readibility.
+1. suports generic packages (not only generic functions and types).
 1. supports const generic parameters (the draft only supports types now).
 
 ## The generic declaration syntax
@@ -40,13 +41,13 @@ In the form,
   `gen` outputs are ever rcommended to be used in older versions, but also not much useful in the current version.
   To summarize, now:
 	* `InputElemKind` may only be `type` and `const`.
+	  (The usefulness of generic `const` parameters is [still uncertain](#are-const-generic-parameters-really-useful).)
 	* `OutputElemKind` may only be `type`, `func`, and `import`.
 * the last portion `[out OutputElemKind]` is the output, it may be blank, `[]` but may not omitted (it is not optional).
   If it is not blank, then its surrounding `[]` can be omitted.
 * the `[inN InputElemKindN]` portions are the inputs.
-  Except the first one, the others are optional but they are may not be blank `[]`.
+  Except the first one, the others are optional but they may not be blank `[]`.
   The first one `[in0 InputElemKind0]` may be blank `[]`, but it is not optional.
-  
 
 _(Note: the syntax used in the current version is a little different from [older versions](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/tree/890bb969383a8c11a7f17308de8a4020488aeb0f).)_
 
@@ -306,7 +307,7 @@ gen new[T type] func {
 
 gen make[T type] func {
 	// apply some constraints
-	assure T.kind == ([]T).kind || T.kind == (map[int]T).kind
+	assure T.kind == ([]T).kind || T.kind == (map[int]T).kind || T.kind == (chan int).kind
 
 	// must be exported
 	func Make(params ...int) T {
@@ -315,7 +316,7 @@ gen make[T type] func {
 }
 ```
 
-## More about generic calls
+## More about generic declarations and calls
 
 ### For a `gen` with single `type` output, in its calls, the `[]` surrounding the last generic arguments may be omitted.
 
@@ -333,6 +334,8 @@ type stringIntTreeMap = TreeMap[string]int
 (Is it good to make this rule mandatory?)
 
 ### For a `gen` with single `func` output, in its calls, the generic arguments may be inserted (at the beginning) into general argument list.
+
+(Is it good to make this rule mandatory?)
 
 For example, the built-in `new` and `make` generic, they may be called with two forms:
 ```
@@ -382,9 +385,15 @@ gen G[T type] type {
 type MyInt = G[int]
 ```
 
+### Calls with the same arguments to a `gen` produce the same output.
+
+The same output can be viewed as an anonymous package.
+
 ### Cyclic calls between `gen`s declared in the same package are disallowed.
 
 _(Early revisons of this propsoal simply mention that cyclic `gen` calls are allowed. This is changed now.)_
+
+Some cyclic `gen` calls are problematic, some might be not. But to avoid the complexity, cyclic `gen` calls are disallowed.
 
 As cyclic package dependencies are disallowed, cyclic calls to `gen`s declared in different packages are impossible.
 
@@ -392,14 +401,18 @@ As cyclic package dependencies are disallowed, cyclic calls to `gen`s declared i
 
 This limit might be too restricted. But from the view of keeping code readable and modulized, it is a good limit.
 
-### Calls with the same arguments to a `gen` produce the same output.
+### A `gen` may not declared within another `gen`.
 
-The same output can be viewed as an anonymous package.
+Nesting `gen`s are unnecessary.
 
 ### Are `const` generic parameters really useful?
 
 If it is proved to be false, then `type` will become the only allowed generic parameter element kind,
-so we can remove the `type` token in each generic parameter declaration to make the code looking cleaner.
+so we can remove the `type` token in each generic parameter declaration to make the code looking cleaner (but less readable?).
+
+## About The Implementation
+
+Please read [the generic implementation part](gen-implementation.md).
 
 ## Contracts
 
@@ -416,7 +429,7 @@ For example, the built-in generic `make` is called as a contract.
 ``` 
 gen Convert [T1 type][T2 type] func {
 	// Constraint T1 must be a slice or map.
-	assure make[T2]
+	assure make[T2] && T2.kind != (chan int).kind
 
 	// Constraint T1 must be a slice type
 	// and element values of T2 may be
@@ -433,7 +446,7 @@ gen Convert [T1 type][T2 type] func {
 }
 
 ```
-
+od returns the name of the type, such as "float64", 
 ## Comparisons between this proposal and the latest official draft
 
 * Map: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/map.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map.go2) (and [another multi-output version](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map2.go2)).

@@ -6,8 +6,8 @@ This proposal suggests using some familar expressions used in daily Go programmi
 to constraint generic (type and const, etc) parameters.
 
 Personally, I think this design combines the advantages of the contract draft v1 and v2.
-* v1: prone to change constraints accidentally, non-precise, ambiguities existing, but almost possibility complete.
-* v2: formal, precise, but possibility limited.
+* v1: prone to change constraints accidentally, non-precise, ambiguities existing, but **almost possibility complete**.
+* v2: **formal, precise**, but possibility limited.
 
 ## Properties
 
@@ -42,7 +42,7 @@ Personally, I think this design combines the advantages of the contract draft v1
 * `T.sendable`: whether or not the type represetned by `T` represents a sendable channel type.
    (There must be an aforementioned contract constrainting `T` to represent
    a channel type).
-* `T.methsets`: the method set of the type represetned by `T`.
+* `T.methods`: the method set of the type represetned by `T`.
 * `T.fields`: the field set of the type represetned by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a struct type).
@@ -71,6 +71,8 @@ but the proeperties are shown here anyway):
    (Maybe, it is good to require all generic constants must be typed.)
 * `C.type`: the type or default type of a constant represented by `C`.
 
+Some of the type properties can be used as constants.
+
 _(`var`, `func`, `import` and `gen` can also be used as contract parameters/arguments,
 but doing this will bring much complexity. So this is not supported temporarily.)_
 
@@ -96,7 +98,7 @@ assure expression
 
 * if `expression` is a boolean, it must be true to pass the checking.
 * if `expression` is an integer, it must be non-zero to pass the checking.
-* if `expression` is a supposed fact, the fact must exit to pass the checking.
+* if `expression` is a supposed fact, the fact must exist to pass the checking.
 
 The proposed syntax is mainly to describe the following example purpose.
 It can be another better form.
@@ -254,20 +256,23 @@ const (
 	Channel
 	Interface
 	...
-	Signed =        Int || Int8 || Int16 || Int32 || Int64
-	Unsgined =      Uint || Uint8 || Uint16 || Uint32 || Uint64 || Uintptr
-	Integer =       Signed || Unsgined
-	FloatingPoint = Float32 || Float64
-	Complex =       Complex64 || Complex128
-	Numeric =       Integer || FloatingPoint || Complex
-	Orderable =     Integer || FloatingPoint || String
-	Addable =       String || Numeric
+	Signed =        Int | Int8 | Int16 | Int32 | Int64
+	Unsgined =      Uint | Uint8 | Uint16 | Uint32 | Uint64 | Uintptr
+	Integer =       Signed | Unsgined
+	FloatingPoint = Float32 | Float64
+	Complex =       Complex64 | Complex128
+	Numeric =       Integer | FloatingPoint | Complex
+	Orderable =     Integer | FloatingPoint | String
+	Addable =       String | Numeric
+	Ptr =           Pointer | UnsafePointer
+	Container =     Array | Slcie | Map
+	Any =           Addable | Bool | Ptr | Container | Channel | Function | Struct | Interface
 )
 ```
 ?
 
 Then the expression `T.kind == [0]int.kind` may be re-written as `T.kind == Array`,
-which is more clean and readable.
+which is cleaner and more readable.
 
 More examples:
 ```
