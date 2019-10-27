@@ -250,9 +250,11 @@ const (
 	Uint
 	...
 	Pointer
+	Struct
 	Array
 	Slice
 	Map
+	Function
 	Channel
 	Interface
 	...
@@ -264,9 +266,10 @@ const (
 	Numeric =       Integer | FloatingPoint | Complex
 	Orderable =     Integer | FloatingPoint | String
 	Addable =       String | Numeric
+	Basic =         Bool | Addable
 	Ptr =           Pointer | UnsafePointer
 	Container =     Array | Slcie | Map
-	Any =           Addable | Bool | Ptr | Container | Channel | Function | Struct | Interface
+	Any =           Basic | Ptr | Struct | Container | Function | Channel | Interface
 )
 ```
 ?

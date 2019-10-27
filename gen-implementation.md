@@ -160,4 +160,4 @@ func main() {
 }
 ```
 
-In generating, to avoid too long type and function generated names, we can use the `Foo_aHsSH` form as names instead.
+In generating, to avoid too long type and function generated names, we can use the `Foo_aHaSh` form as names instead.
