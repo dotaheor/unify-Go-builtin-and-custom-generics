@@ -161,3 +161,10 @@ func main() {
 ```
 
 In generating, to avoid too long type and function generated names, we can use the `Foo_aHaSh` form as names instead.
+
+----
+
+Several days after I wrote down the above content, I suddenly realized that the real intention of
+[the alias declarations propsoal](https://github.com/golang/go/issues/16339) might be for generics,
+instead of the claimed large-scale refactoring in that proposal. Maybe, maybe, I will stop here.
+
