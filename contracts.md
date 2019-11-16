@@ -64,7 +64,7 @@ Personally, I think this design combines the advantages of the contract draft v1
    a function type).
 
 `const` properties (the offical contract draft 2 doesn't support `const` generic parameters now,
-but the proeperties are shown here anyway):
+but the properties are shown here anyway):
 * `C.name`: the name of the constant represented by `C` is signed.
    The value might be `""` for intermediate values, such as `T.length.name`.
 * `C.typed`: whether or not the constant represented by `C` is typed.
