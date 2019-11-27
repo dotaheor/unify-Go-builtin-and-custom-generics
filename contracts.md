@@ -3,7 +3,7 @@ This contract proposal is a part of [the generic design](README.md).
 It can also be used with other generic type and function declartion proposals.
 
 This proposal suggests using some familar expressions used in daily Go programming
-to constraint generic (type and const, etc) parameters.
+to constrain generic (type and const, etc) parameters.
 
 Personally, I think this design combines the advantages of the contract draft v1 and v2.
 * v1: prone to change constraints accidentally, non-precise, ambiguities existing, but **almost possibility complete**.
@@ -19,52 +19,52 @@ Personally, I think this design combines the advantages of the contract draft v1
    (Not a very elementary property.
    There must be an aforementioned contract constrainting `T` to represent
    an integer or floating-point type to use this property.)
-* `T.orderable`, whether or not the values of the type represetned by `T` can be compared with `<` and `>`, etc.
+* `T.orderable`, whether or not the values of the type represented by `T` can be compared with `<` and `>`, etc.
    (Not a very elementary property).
-* `T.comparable`, whether or not the type represetned by `T` represents a comparable type.
-* `T.embeddable`, whether or not ~~the type represetned by~~ `T` is embeddable.
-* `T.base`: the base type of the pointer type represetned by `T`.
+* `T.comparable`, whether or not the type represented by `T` represents a comparable type.
+* `T.embeddable`, whether or not ~~the type represented by~~ `T` is embeddable.
+* `T.base`: the base type of the pointer type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a pointer type).
-* `T.key`: the key type of the map type represetned by `T`.
+* `T.key`: the key type of the map type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a map, slice, array or string type. If `T` is a slice, array or string type,
    then `T.key` is `int`).
-* `T.element`: the element type of the type represetned by `T`.
+* `T.element`: the element type of the type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    an array, slice, map, or channel type to use this property.)
-* `T.length`: the length of the array type represetned by `T`.
+* `T.length`: the length of the array type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    an array type).
-* `T.receivable`: whether or not the type represetned by `T` represents a receivable channel type.
+* `T.receivable`: whether or not the type represented by `T` represents a receivable channel type.
    (There must be an aforementioned contract constrainting `T` to represent
    a channel type).
-* `T.sendable`: whether or not the type represetned by `T` represents a sendable channel type.
+* `T.sendable`: whether or not the type represented by `T` represents a sendable channel type.
    (There must be an aforementioned contract constrainting `T` to represent
    a channel type).
-* `T.methods`: the method set of the type represetned by `T`.
-* `T.fields`: the field set of the type represetned by `T`.
+* `T.methods`: the method set of the type represented by `T`.
+* `T.fields`: the field set of the type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a struct type).
-* `T.selectors`: the selector set (both methods and fields) of the type represetned by `T`.
-* `T.variadic`: whether or not the type represetned by `T` represents a variadic function type.
+* `T.selectors`: the selector set (both methods and fields) of the type represented by `T`.
+* `T.variadic`: whether or not the type represented by `T` represents a variadic function type.
    (There must be an aforementioned contract constrainting `T` to represent
    a function type).
-* `T.inputs.count`: the number of parameters of the function type represetned by `T`.
+* `T.inputs.count`: the number of parameters of the function type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a function type).
-* `T.inputs.0`: the first parameter type of the function type represetned by `T`.
+* `T.inputs.0`: the first parameter type of the function type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a function type).
-* `T.outputs.count`: the number of results of the function type represetned by `T`.
+* `T.outputs.count`: the number of results of the function type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a function type).
-* `T.outputs.0`: the first result type of the function type represetned by `T`.
+* `T.outputs.0`: the first result type of the function type represented by `T`.
    (There must be an aforementioned contract constrainting `T` to represent
    a function type).
 
 `const` properties (the offical contract draft 2 doesn't support `const` generic parameters now,
-but the proeperties are shown here anyway):
+but the properties are shown here anyway):
 * `C.name`: the name of the constant represented by `C` is signed.
    The value might be `""` for intermediate values, such as `T.length.name`.
 * `C.typed`: whether or not the constant represented by `C` is typed.
