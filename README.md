@@ -1,5 +1,5 @@
 
-# Generic is gen: mini-package - a solution to unify Go builtin and custom generics
+# A solution which unifies Go builtin and custom generics, and keeps Go clean and simple at the same time
 
 This (immature) solution is extended from
 [my many](https://gist.github.com/dotaheor/4b7496dba1939ce3f91a0f8cfccef927)
@@ -68,6 +68,9 @@ The following `gen` has two inputs (both are `type`) and one output (a `func`).
 ```
 // declaration
 gen ConvertSlice[OldElement type][NewElement type] [func] {
+	// The contract this gen must satisfy, see blow sections for details.
+	assure NewElement(OldElement.value) // convertiable from OldElement to NewElement
+	
 	// The only exported function is used as the output of the generic.
 	// NOTE: the name of the declared function is not important,
 	//       as long as it is exported.
@@ -228,6 +231,8 @@ The following shown builtin generic declarations are all "look-like", not "exact
 Builtin array and slice declaration:
 ```
 gen array[N const][T type] type {
+	assure N >= 0
+
 	... // export an array type
 }
 
@@ -311,7 +316,20 @@ gen make[T type] func {
 
 	// must be exported
 	func Make(params ...int) T {
-		// ...
+		switch T.kind {
+		case ([]T).kind:
+			// ...
+		case (map[int]T).kind:
+			// ...
+		case (chan int).kind:
+			if T.receivable && T.sendable {
+				// ...
+			} else if T.receivable {
+				// ...
+			} else if T.sendable {
+				// ...
+			}
+		}
 	}
 }
 ```
@@ -369,6 +387,13 @@ func main() {
 	nums := []int{1, 2, 3}
 	fmt.Println(ConvertSlice(nums)...)
 }
+```
+
+More inference examples:
+```
+var x string = new()          // same as: var x = new[string](), and: var x = new(string)
+var m map[int]string = make() // same as: var m1 = make[map[int]string]()
+var s []int = make(100)       // same as: var s1 = make[[]int](100)
 ```
 
 Compilers can infer the first generic argument as the element type of `words` or `nums`,
@@ -446,7 +471,7 @@ gen Convert [T1 type][T2 type] func {
 }
 
 ```
-od returns the name of the type, such as "float64", 
+ 
 ## Comparisons between this proposal and the latest official draft
 
 * Map: [the draft](https://go-review.googlesource.com/c/go/+/187317/3/src/go/parser/testdata/map.go2) vs. [this proposal](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map.go2) (and [another multi-output version](https://github.com/dotaheor/unify-Go-builtin-and-custom-generics/blob/master/examples/src/go/parser/testdata/map2.go2)).
@@ -455,5 +480,21 @@ od returns the name of the type, such as "float64",
 
 ## More examples
 
-(todo)
+```
+gen merge[T type] func {
+	func Merge(ss ...[]T) []T {
+		n := 0
+		for _, s := range ss {
+			n += len(s)
+		}
+		
+		r := make([]T, 0, n)
+		for _, s := range ss {
+			r = append(r, s...)
+		}
+		
+		return r
+	}
+}
+```
 

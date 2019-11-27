@@ -173,6 +173,21 @@ assure T.selectors {
 	}
 ```
 
+## Multiple constraints can be group in `()`
+
+For exxample:
+```
+assure (
+	Ty.kind == (map[int]int).kind
+	Ty.element.value = Tx.base.value
+	Ta.selectors {
+		.X int
+		.F func(string) int
+		Tb.selectors
+	}
+)
+```
+
 ## Intermediate type declarations can show up between `assure` lines
 
 For convenience, some intermediate types are allowed to declared between assure lines.
