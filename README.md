@@ -1,5 +1,5 @@
 
-# A solution which unifies Go builtin and custom generics, and keeps Go clean and simple at the same time
+# A solution which unifies Go builtin and custom generics, and keeps Go code clean at the same time
 
 This (immature) solution is extended from
 [my many](https://gist.github.com/dotaheor/4b7496dba1939ce3f91a0f8cfccef927)
@@ -19,7 +19,7 @@ personally, I think this proposal has the following advantages:
 1. using generics is much like calling functions, so it is easy to understand.
 1. avoids the ~~cumbersome~~ crowded feeling of generic function and type declarations, and removes many code duplications.
    Both of the two are important for a better code readibility.
-1. suports generic packages (not only generic functions and types).
+1. supports generic packages (not only generic functions and types).
 1. supports const generic parameters (the draft only supports types now).
 
 ## The generic declaration syntax
@@ -68,7 +68,7 @@ The following `gen` has two inputs (both are `type`) and one output (a `func`).
 ```
 // declaration
 gen ConvertSlice[OldElement type][NewElement type] [func] {
-	// The contract this gen must satisfy, see blow sections for details.
+	// The contract this gen must satisfy, see following sections for details.
 	assure NewElement(OldElement.value) // convertiable from OldElement to NewElement
 	
 	// The only exported function is used as the output of the generic.
@@ -88,6 +88,7 @@ gen ConvertSlice[OldElement type][NewElement type] [func] {
 	
 	// There can be more functions declared, but they must be all
 	// unexported, for this gen only allows one exported function.
+	// The unexported functions can be called in the above exported one.
 	func anotherUnexportedFunction() {}
 }
 
@@ -277,6 +278,7 @@ gen <-chan[T type] type {
 		...
 	}
 	
+	// This is an operator function.
 	func <- (c C) (v T) {
 		// ... receive a value from channel c
 	}
@@ -288,6 +290,7 @@ gen chan<-[T type] type {
 		...
 	}
 	
+	// This is an opeartor method.
 	func (c C) <- (v T) {
 		// ... send a value v to channel c
 	}
@@ -296,7 +299,7 @@ gen chan<-[T type] type {
 
 The literal representations of directional channel types are also builtin generic privileges.
 
-Operator function generics are also builtin generic privileges.
+Operator function/method are also builtin generic privileges.
 
 (BTW, can we make `map` and `chan` become non-keywords for better consistency?)
 
@@ -391,9 +394,12 @@ func main() {
 
 More inference examples:
 ```
-var x string = new()          // same as: var x = new[string](), and: var x = new(string)
+var x *string = new()         // same as: var x = new[string](), 
+                              //     and: var x = new(string)
 var m map[int]string = make() // same as: var m1 = make[map[int]string]()
+                              //     and: var m1 = make(map[int]string)
 var s []int = make(100)       // same as: var s1 = make[[]int](100)
+                              //     and: var s1 = make([]int, 100)
 ```
 
 Compilers can infer the first generic argument as the element type of `words` or `nums`,
@@ -429,6 +435,10 @@ This limit might be too restricted. But from the view of keeping code readable a
 ### A `gen` may not declared within another `gen`.
 
 Nesting `gen`s are unnecessary.
+
+### Is the new `gen` keyword essentail?
+
+Is it good it think `gen`s are parameterized packages and use `package` to replace the `gen` keyword?
 
 ### Are `const` generic parameters really useful?
 
@@ -481,7 +491,7 @@ gen Convert [T1 type][T2 type] func {
 ## More examples
 
 ```
-gen merge[T type] func {
+gen Merge[T type] func {
 	func Merge(ss ...[]T) []T {
 		n := 0
 		for _, s := range ss {
@@ -496,5 +506,57 @@ gen merge[T type] func {
 		return r
 	}
 }
+
+gen Keys[M type] func {
+	assuure M.kind == Map
+	
+	type K = M.key
+
+	func Keys(m M) []K {
+		if m == nil {
+			return nil
+		}
+		keys := make([]K, 0, len(m))
+		for k := range m {
+			keys = append(keys, k)
+		}
+		return keys
+	}
+}
+
+gen Convert[From type][To type] func {
+	assuure To(From.value)
+
+	func Convert(vs []From, ts *[]To) []To {
+		if vs == nil {
+			if ts != nil {
+				*ts = nil
+			}
+			return nil
+		}
+		r = make([]T, 0, len(vs))
+		for i := 0; i < len(vs); i++ {
+			r = append(ts, To(vs[i]))
+		}
+		if ts != nil {
+			*ts = r // or ts = &r
+		}
+		return r
+	}
+}
+
+gen IncreaseStat[T type] func {
+	assure T.fields.N int
+
+	func IncreaseStat(t *T) {
+		t.N++
+	}
+}
+
+// ...
 ```
+
+
+
+
 
