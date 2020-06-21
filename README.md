@@ -507,8 +507,17 @@ gen Merge[T type] func {
 	}
 }
 
+// use it:
+
+var a, b = []string{"hello"}, []string{"world", "!"}
+var x, y, z = []{1, 2, 3}, []{5, 5}, []{9}
+var _ = Merge(x, y) // [1 2 3 5 5 9]
+var _ = Merge(a, b) // ["hello" "world" "!"]
+```
+
+```
 gen Keys[M type] func {
-	assuure M.kind == Map
+	assure M.kind == Map
 	
 	type K = M.key
 
@@ -524,27 +533,13 @@ gen Keys[M type] func {
 	}
 }
 
-gen Convert[From type][To type] func {
-	assuure To(From.value)
+// use it:
 
-	func Convert(vs []From, ts *[]To) []To {
-		if vs == nil {
-			if ts != nil {
-				*ts = nil
-			}
-			return nil
-		}
-		r = make([]T, 0, len(vs))
-		for i := 0; i < len(vs); i++ {
-			r = append(ts, To(vs[i]))
-		}
-		if ts != nil {
-			*ts = r // or ts = &r
-		}
-		return r
-	}
-}
+var m = map[string]int{"foo", 1, "bar": 2}
+var _ = Keys(m) // ["foo" "bar"]
+```
 
+```
 gen IncreaseStat[T type] func {
 	assure T.fields.N int
 
@@ -553,9 +548,86 @@ gen IncreaseStat[T type] func {
 	}
 }
 
-// ...
+// use it:
+
+type Foo struct {
+	x bool
+	N int
+}
+
+type Bar struct {
+	N int
+	y string
+}
+
+var f Foo
+var b Bar
+IncreaseStat(&f) // f.N = 1
+IncreaseStat(&b) // b.N = 1s
 ```
 
+```
+gen Vector[T type] type {
+	type Vector []T
+	
+	func (v *Vector) Push(x T) {
+		*v = append(*v, x)
+	}
+}
+```
+
+```
+gen Smallest[T type] func {
+	assure T.orderable == true
+	
+	func Smallest(s []T) T {
+		r := s[0]
+		for _, v := range s[1:] {
+			if v < r {
+				r = v
+			}
+		}
+		return r
+	}
+}
+```
+
+```
+gen Map[F, T type] func { 
+	func Map(s []F, f func(F) T) []T {
+		r := make([]T, len(s))
+		for i, v := range s {
+			r[i] = f(v)
+		}
+		return r
+	}
+}
+```
+
+```
+package graph
+
+gen Graph[Node type][Edge type] type {
+	assure Node.methods.Edges() []Edge
+	assure Edge.Nodes() (from, to Node)
+	
+	type Graph struct {
+		n Node
+		e Edge
+	}
+	
+	func (g *Graph) ShortestPath(from, to Node) []Edge { ... }
+}
+
+gen New[Node type] func {
+	type Edge = Node.methods.Edges.outputs.0
+	assure Graph[Node][Edge]
+	
+	func New(nodes []Node) *Graph[Node][Edge] {
+		...
+	}
+}
+```
 
 
 

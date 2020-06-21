@@ -89,7 +89,7 @@ Note, the following properties were removed from this propsoal:
 
 Each `assure` line describe a constraint, or a mini contract. (See following sections for examples).
 
-_(Other candidates to replace the `assure` keyword: `ensure`, `require`, `must`, `assert`, etc.)_
+_(Other candidates to replace the `assure` keyword: `ensure`, `require`, `must`, `assert`, `expect`, etc.)_
 
 Syntax
 ```
