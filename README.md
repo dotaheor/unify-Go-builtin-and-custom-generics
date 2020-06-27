@@ -511,8 +511,8 @@ gen Merge[T type] func {
 
 var a, b = []string{"hello"}, []string{"world", "!"}
 var x, y, z = []{1, 2, 3}, []{5, 5}, []{9}
-var _ = Merge(x, y) // [1 2 3 5 5 9]
-var _ = Merge(a, b) // ["hello" "world" "!"]
+var _ = Merge(x, y, z) // [1 2 3 5 5 9]
+var _ = Merge(a, b)    // ["hello" "world" "!"]
 ```
 
 ```
@@ -563,7 +563,7 @@ type Bar struct {
 var f Foo
 var b Bar
 IncreaseStat(&f) // f.N = 1
-IncreaseStat(&b) // b.N = 1s
+IncreaseStat(&b) // b.N = 1
 ```
 
 ```
@@ -593,7 +593,7 @@ gen Smallest[T type] func {
 ```
 
 ```
-gen Map[F, T type] func { 
+gen Map[F type][T type] func { 
 	func Map(s []F, f func(F) T) []T {
 		r := make([]T, len(s))
 		for i, v := range s {
@@ -612,8 +612,8 @@ gen Graph[Node type][Edge type] type {
 	assure Edge.Nodes() (from, to Node)
 	
 	type Graph struct {
-		n Node
-		e Edge
+		nodes []*Node
+		edges []Edge
 	}
 	
 	func (g *Graph) ShortestPath(from, to Node) []Edge { ... }
