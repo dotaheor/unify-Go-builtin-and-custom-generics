@@ -609,7 +609,7 @@ package graph
 
 gen Graph[Node type][Edge type] type {
 	assure Node.methods.Edges() []Edge
-	assure Edge.Nodes() (from, to Node)
+	assure Edge.methods.Nodes() (from, to Node)
 	
 	type Graph struct {
 		nodes []*Node
