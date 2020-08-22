@@ -18,7 +18,7 @@ The declaration form differs to the main proposal in several points:
 1. It uses the old `package` keyword (instead of inventing a `gen` keyword) to declared a generic.
 1. All generic parameters are enclosed in one pair of [].
 1. There is not the output part in the declaration.
-1. Type paramemters are not followed by the `type` keyword.
+1. Type paramemters are not followed by the `type` keyword. This means `const` parameters are not supported in this proposal.
 
 Let's view some simple examples to get how to declare and use generics
 (please note that the syntax forms are different when using generic type arguments between functions, types and packages).
