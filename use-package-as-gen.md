@@ -1,4 +1,5 @@
-Most content of this variant is the same as (or similar to) [the main proposal](README.md). It is the declaration syntax is different. This variant doesn't need the `gen` keyword presented in the the main proposal.
+Most content of this variant is the same as (or similar to) [the main proposal](README.md).
+This variant doesn't need the `gen` keyword presented in the the main proposal.
 
 [The contract part](contracts.md) has no differences to the main proposal.
 
