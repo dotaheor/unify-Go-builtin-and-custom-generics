@@ -24,6 +24,8 @@ personally, I think this proposal has the following advantages:
 
 ## The generic declaration syntax
 
+_(There is [a variant of this proposal](use-package-as-gen.md), which uses a different syntax set in the declarations.)_
+
 Now, there are 5 kinds of code element declarations (except labels) in Go: `var`, `const`, `func`, `type`, and `import`.
 This solution adds a new one `gen`, which means a generic declaration.
 
@@ -127,7 +129,7 @@ gen List[T type] type {
 	func (n *List) Push(e T) *List {...}
 	func (n *List) Dump() {...}
 	
-	// Some other unexport variables/constants/types/functions
+	// Some other unexported variables/constants/types/functions
 	// can be declared here.
 	// ...
 	var x = 1
