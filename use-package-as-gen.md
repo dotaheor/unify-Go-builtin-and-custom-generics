@@ -20,7 +20,7 @@ The declaration form differs to the main proposal in several points:
 1. Type paramemters are not followed by the `type` keyword.
 
 Let's view some simple examples to get how to declare and use generics
-(please note that the syntax forms are different between using generic type arguments in functions, types and packages).
+(please note that the syntax forms are different when using generic type arguments between functions, types and packages).
 * aGenericFunc(Type1, Type2, ..., TypeN, value1, value2, ...)
 * aGenericType[Type1][Type2]TypeN
 * aGenericPackage[Type1, Type2, ..., TypeN]
@@ -57,7 +57,7 @@ package ConvertSlice[OldElement, NewElement] {
 // at the beginning of the list.
 func strings2Interfaces = ConvertSlice(string, interfacce{})
 // This is also allowed.
-var _ = ConvertSlice[string][interfacce{}]
+var _ = ConvertSlice(string, interfacce{})
 
 func main() {
 	words := []string{"hello", "bye"}
