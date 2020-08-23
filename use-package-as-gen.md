@@ -321,6 +321,27 @@ package New[Node] {
 }
 ```
 
+The above one can also be written as:
+```
+package graph
+
+package Graph[Node] {
+	assure Node.methods.Edges() []Edge
+	type Edge = Node.methods.Edges.outputs.0
+	assure Edge.methods.Nodes() (Node, Node)
+	
+	type Graph struct {
+		nodes []*Node
+		edges []Edge
+	}
+	
+	func (g *Graph) ShortestPath(from, to Node) []Edge { ... }
+	
+	func (g *Graph) SetNodes(nodes []Node) {
+		// This method is used to replace the New in the above implementation.
+	}
+}
+```
 
 
 
