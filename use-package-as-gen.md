@@ -312,8 +312,22 @@ package Graph[Node, Edge] {
 	
 	func (g *Graph) ShortestPath(from, to Node) []Edge { ... }
 	
-	func (g *Graph) SetNodes(nodes []Node) {...}
+	func (g *Graph) SetNodes(nodes ...Node) { ... }
 }
+
+// use it in another package
+
+import graph
+
+type node struct { ... }
+func (n *node) Edges() []*edge { ... }
+type edge struct { ... }
+func (e *edge) Nodes (from, to *node) { ... }
+
+var n1 = &node{ ... }
+var n2 = &node{ ... }
+var g graph.Graph[*node]*edge
+g.SetNodes(n1, n2)
 ```
 
 
