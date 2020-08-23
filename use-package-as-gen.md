@@ -300,10 +300,7 @@ package Map[F, T] {
 package graph
 
 package Graph[Node] {
-	assure Node.methods.Edges.outputs.count == 1
-	type Edges = Node.methods.Edges.outputs.0
-	assure Edges.kind == Slice
-	type Edge = Edges.element
+	type Edge
 	assure Node.methods.Edges() []Edge
 	assure Edge.methods.Nodes() (Node, Node)
 	
