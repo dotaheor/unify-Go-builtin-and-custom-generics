@@ -8,7 +8,7 @@ This variant doesn't need the `gen` keyword presented in the the main proposal.
 The form for a generic declartion looks like:
 ```
 package GenName[inType0, inType1, ..., inTypeN] {
-	...
+	... // Go 1 code, such as type, function/method declarations
 }
 ```
 
@@ -20,21 +20,21 @@ The declaration form differs to the main proposal in several points:
 1. There is not the output part in the declaration.
 1. Type paramemters are not followed by the `type` keyword. This means `const` parameters are not supported in this proposal.
 
-Let's view some simple examples to get how to declare and use generics
-(please note that the syntax forms are different when using generic type arguments between functions, types and packages).
+Let's view some simple examples to get how to declare and use generics.
+Please note that the syntax forms are different when using generic type arguments between functions, types and packages:
 * aGenericFunc(Type1, Type2, ..., TypeN, value1, value2, ...)
-* aGenericType[Type1][Type2]TypeN
+* aGenericType[Type1][Type2][...]TypeN
 * aGenericPackage[Type1, Type2, ..., TypeN]
 
 ## Some simple custom generic examples
 
-### Exampe 1 (declare generic function):
+### Exampe 1 (declare a generic function):
 
 
 ```
 // declaration
 package ConvertSlice[OldElement, NewElement] {
-	// The contract this gen must satisfy, see following sections for details.
+	// The contract this genric must satisfy, see the contract page for details.
 	assure NewElement(OldElement.value) // convertiable from OldElement to NewElement
 	
 	// The name of the function is the same as the generic,
@@ -70,7 +70,7 @@ func main() {
 }
 ```
 
-### Example 2 (declare generic type):
+### Example 2 (declare a generic type):
 
 ```
 // declaration
@@ -110,7 +110,7 @@ func main() {
 }
 ```
 
-### Example 3 (declare another generic type)):
+### Example 3 (declare another generic type):
 
 ```
 // declaration
@@ -125,10 +125,6 @@ package TreeMap[Key, Element] {
 	func (t *TreeMap) Get(k Key) Element {...}
 	func (t *TreeMap) Has(k Key) bool {...}
 	func (t *TreeMap) Delete(k Key)(Element, bool) {...}
-
-	// There can be more functions/types declared, but they must be all
-	// unexported (if there has already been a function/type which
-	// has the same name as the declared geneirc, just like this one).
 }
 
 // use it
@@ -165,7 +161,7 @@ package Example[T1, T2] {
 
 // use it
 
-// All type arguments of generic package instance
+// All type arguments of a generic package instance
 // must be enclosed in the same pair of [].
 import alib Example[string, int] // we can use alib as an imported package
 
@@ -200,7 +196,7 @@ var a, b = []string{"hello"}, []string{"world", "!"}
 var x, y, z = []{1, 2, 3}, []{5, 5}, []{9}
 
 // By making use of type inference, generic type arguments
-// don't need to be presented here.
+// don't need to present here.
 var _ = Merge(x, y, z) // [1 2 3 5 5 9]
 var _ = Merge(a, b)    // ["hello" "world" "!"]
 ```
@@ -228,7 +224,7 @@ package Keys[M] {
 var m = map[string]int{"foo", 1, "bar": 2}
 
 // By making use of type inference, generic type arguments
-// don't need to be presented here.
+// don't need to present here.
 var _ = Keys(m) // ["foo" "bar"]
 ```
 
@@ -257,7 +253,7 @@ var f Foo
 var b Bar
 
 // By making use of type inference, generic type arguments
-// don't need to be presented here.
+// don't need to present here.
 IncreaseStat(&f) // f.N = 1
 IncreaseStat(&b) // b.N = 1
 ```
