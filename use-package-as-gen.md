@@ -299,10 +299,9 @@ package Map[F, T] {
 ```
 package graph
 
-package Graph[Node] {
-	type Edge
-	assure Node.methods.Edges() []Edge
-	assure Edge.methods.Nodes() (Node, Node)
+package Graph[Node, Edge] {
+	assure Node.methods.Edges() []Edge       // Node must the specified method
+	assure Edge.methods.Nodes() (Node, Node) // Edge must the specified method
 	
 	type Graph struct {
 		nodes []*Node
@@ -311,9 +310,7 @@ package Graph[Node] {
 	
 	func (g *Graph) ShortestPath(from, to Node) []Edge { ... }
 	
-	func (g *Graph) SetNodes(nodes []Node) {
-		// This method is used to replace the New in the above implementation.
-	}
+	func (g *Graph) SetNodes(nodes []Node) {...}
 }
 ```
 
