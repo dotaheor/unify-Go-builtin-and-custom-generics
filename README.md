@@ -609,9 +609,9 @@ gen Map[F type][T type] func {
 ```
 package graph
 
-gen Graph[Node type][Edge type] type {
-	assure Node.methods.Edges() []Edge
-	assure Edge.methods.Nodes() (from, to Node)
+package Graph[Node type][Edge type] {
+	assure Node.methods.Edges() []Edge       // Node must the specified method
+	assure Edge.methods.Nodes() (Node, Node) // Edge must the specified method
 	
 	type Graph struct {
 		nodes []*Node
@@ -619,15 +619,8 @@ gen Graph[Node type][Edge type] type {
 	}
 	
 	func (g *Graph) ShortestPath(from, to Node) []Edge { ... }
-}
-
-gen New[Node type] func {
-	type Edge = Node.methods.Edges.outputs.0
-	assure Graph[Node][Edge]
 	
-	func New(nodes []Node) *Graph[Node][Edge] {
-		...
-	}
+	func (g *Graph) SetNodes(nodes []Node) {...}
 }
 ```
 
