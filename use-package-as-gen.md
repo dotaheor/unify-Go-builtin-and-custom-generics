@@ -8,6 +8,8 @@ This variant doesn't need the `gen` keyword presented in the the main proposal.
 The form for a generic declartion looks like:
 ```
 package GenName[inType0, inType1, ..., inTypeN] {
+	... // assure lines to constraint type parameters
+	
 	... // Go 1 code, such as type, function/method declarations
 }
 ```
