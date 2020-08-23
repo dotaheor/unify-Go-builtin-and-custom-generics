@@ -299,35 +299,12 @@ package Map[F, T] {
 ```
 package graph
 
-package Graph[Node, Edge] {
-	assure Node.methods.Edges() []Edge
-	assure Edge.methods.Nodes() (from, to Node)
-	
-	type Graph struct {
-		nodes []*Node
-		edges []Edge
-	}
-	
-	func (g *Graph) ShortestPath(from, to Node) []Edge { ... }
-}
-
-package New[Node] {
-	type Edge = Node.methods.Edges.outputs.0
-	assure Graph[Node]Edge
-	
-	func New(nodes []Node) *Graph[Node]Edge {
-		...
-	}
-}
-```
-
-The above one can also be written as:
-```
-package graph
-
 package Graph[Node] {
+	assure Node.methods.Edges.outputs.count == 1
+	type Edges = Node.methods.Edges.outputs.0
+	assure Edges.kind == Slice
+	type Edge = Edges.element
 	assure Node.methods.Edges() []Edge
-	type Edge = Node.methods.Edges.outputs.0
 	assure Edge.methods.Nodes() (Node, Node)
 	
 	type Graph struct {
