@@ -614,7 +614,7 @@ package Graph[Node type][Edge type] {
 	assure Edge.methods.Nodes() (Node, Node) // Edge must the specified method
 	
 	type Graph struct {
-		nodes []*Node
+		nodes []Node
 		edges []Edge
 	}
 	
