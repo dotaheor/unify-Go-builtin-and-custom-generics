@@ -14,7 +14,7 @@ package GenName[inType0, inType1, ..., inTypeN] (
 }
 ```
 
-The `( ... // assure lines )` is optional
+The `( ... // assure lines )` part is optional. It doesn't need to present if no constraints for type parameters.
 
 In other words, a custom generic are declared as mini-package in a single source file. 
 
