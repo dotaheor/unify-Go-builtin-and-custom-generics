@@ -7,12 +7,14 @@ This variant doesn't need the `gen` keyword presented in the the main proposal.
 
 The form for a generic declartion looks like:
 ```
-package GenName[inType0, inType1, ..., inTypeN] {
+package GenName[inType0, inType1, ..., inTypeN] (
 	... // assure lines to constraint type parameters
-	
+) {
 	... // Go 1 code, such as type, function/method declarations
 }
 ```
+
+The `( ... // assure lines )` is optional
 
 In other words, a custom generic are declared as mini-package in a single source file. 
 
@@ -35,10 +37,10 @@ Please note that the syntax forms are different when using generic type argument
 
 ```
 // declaration
-package ConvertSlice[OldElement, NewElement] {
+package ConvertSlice[OldElement, NewElement] (
 	// The contract this genric must satisfy, see the contract page for details.
 	assure NewElement(OldElement.value) // convertiable from OldElement to NewElement
-	
+) {
 	// The name of the function is the same as the generic,
 	// so this generic can be called as a function.
 	func ConvertSlice(x []OldElement) []NewElement {
@@ -116,10 +118,10 @@ func main() {
 
 ```
 // declaration
-package TreeMap[Key, Element] {
+package TreeMap[Key, Element] (
 	// Apply some constraints.
 	assure Key.kind == int.kind || Key.kind == string.kind
-	
+) {
 	// The name of the type is the same as the generic,
 	// so this generic can be called as a generic type.
 	type TreeMap struct {...}
@@ -204,9 +206,9 @@ var _ = Merge(a, b)    // ["hello" "world" "!"]
 ```
 
 ```
-package Keys[M] {
+package Keys[M] (
 	assure M.kind == Map
-	
+) {
 	type K = M.key
 
 	func Keys(m M) []K {
@@ -231,9 +233,9 @@ var _ = Keys(m) // ["foo" "bar"]
 ```
 
 ```
-package IncreaseStat[T] {
+package IncreaseStat[T] (
 	assure T.fields.N int
-
+) {
 	func IncreaseStat(t *T) {
 		t.N++
 	}
@@ -271,9 +273,9 @@ package Vector[T] {
 ```
 
 ```
-package Smallest[T] {
+package Smallest[T] (
 	assure T.orderable == true
-	
+) {
 	func Smallest(s []T) T {
 		r := s[0]
 		for _, v := range s[1:] {
@@ -301,10 +303,10 @@ package Map[F, T] {
 ```
 package graph
 
-package Graph[Node, Edge] {
+package Graph[Node, Edge] (
 	assure Node.methods.Edges() []Edge       // Node must the specified method
 	assure Edge.methods.Nodes() (Node, Node) // Edge must the specified method
-	
+) {
 	type Graph struct {
 		nodes []Node
 		edges []Edge
@@ -328,6 +330,7 @@ var n1 = &node{ ... }
 var n2 = &node{ ... }
 var g graph.Graph[*node]*edge
 g.SetNodes(n1, n2)
+edges := g.ShortestPath(n1, n2)
 ```
 
 
