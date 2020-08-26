@@ -26,9 +26,9 @@ The declaration form differs to the main proposal in several points:
 
 Let's view some simple examples to get how to declare and use generics.
 Please note that the syntax forms are different when using generic type arguments between functions, types and packages:
-* aGenericFunc(Type1, Type2, ..., TypeN, value1, value2, ...)
-* aGenericType[Type1][Type2]...[TypeN_1]TypeN
-* aGenericPackage[Type1, Type2, ..., TypeN]
+* `aGenericFunc(Type1, Type2, ..., TypeN, value1, value2, ...)`, just like `make(ContainerType, length)`
+* `aGenericType[Type1][Type2]...[TypeN_1]TypeN`, just like `map[Key]Element`
+* `aGenericPackage[Type1, Type2, ..., TypeN]`
 
 ## Some simple custom generic examples
 
