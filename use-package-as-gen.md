@@ -304,8 +304,8 @@ package Map[F, T] {
 package graph
 
 package Graph[Node, Edge] (
-	assure Node.methods.Edges() []Edge       // Node must has the specified method
-	assure Edge.methods.Nodes() (Node, Node) // Edge must has the specified method
+	assure Node.methods.Edges() []Edge       // Node must have the specified method
+	assure Edge.methods.Nodes() (Node, Node) // Edge must have the specified method
 ) {
 	type Graph struct {
 		nodes []Node
