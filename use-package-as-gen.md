@@ -14,7 +14,7 @@ package GenName[inType0, inType1, ..., inTypeN] (
 }
 ```
 
-The `( ... // assure lines )` part is optional. It doesn't need to present if no constraints for type parameters.
+The `( ... // assure lines )` part is optional. It doesn't need to present if no constraints are required for type parameters.
 
 In other words, a custom generic are declared as mini-package in a single source file. 
 
@@ -304,8 +304,8 @@ package Map[F, T] {
 package graph
 
 package Graph[Node, Edge] (
-	assure Node.methods.Edges() []Edge       // Node must the specified method
-	assure Edge.methods.Nodes() (Node, Node) // Edge must the specified method
+	assure Node.methods.Edges() []Edge       // Node must has the specified method
+	assure Edge.methods.Nodes() (Node, Node) // Edge must has the specified method
 ) {
 	type Graph struct {
 		nodes []Node
