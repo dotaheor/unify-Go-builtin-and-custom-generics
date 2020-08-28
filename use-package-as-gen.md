@@ -16,6 +16,8 @@ package GenName[inType0, inType1, ..., inTypeN] (
 
 The `( ... // assure lines )` part is optional. It doesn't need to present if no constraints are required for type parameters.
 
+_(Another syntax choice is exchanging the `[]` and `()` uses: `package GenName(Types)[AssureLines]{Go1Code}`)_
+
 In other words, a custom generic are declared as mini-package in a single source file. 
 
 The declaration form differs to the main proposal in several points:
