@@ -15,6 +15,10 @@ package GenName[inType0, inType1, ..., inTypeN] (
 ```
 
 The `( ... // assure lines )` part is optional. It doesn't need to present if no constraints are required for type parameters.
+(The `assure` keyword might be not essential.)
+
+The `{... // Go 1 code }` can also be omitted, in which case the `( ... // assure lines )` part must present.
+For such a case, a named contract/constaint is defined.
 
 In other words, a custom generic are declared as mini-package in a single source file. 
 
@@ -333,5 +337,68 @@ g.SetNodes(n1, n2)
 edges := g.ShortestPath(n1, n2)
 ```
 
+```
+package Max[T](
+	assure T.orderable == true
+){
+	func Max(a, b T) T {
+		if a < b {
+			return b
+		}
+		return a
+	}
+}
 
+package Min[T](
+	assure T.orderable == true
+){
+	func Min(a, b T) T {
+		if a < b {
+			return a
+		}
+		return b
+	}
+}
+```
 
+```
+package readonlybytes[T] (
+	assert T.kind & (String | Slice)
+)
+
+package Reader[T] (
+	assert readonlybytes[T]
+){
+	type Reader interface {
+		Read(bytes T)(n int, err error)
+	}
+}
+
+package MyReader[T](
+	assert T.kind & (String | Slice)
+){
+	type MyReader struct{}
+
+	type (r *MyReader) Read(s T)(int, error) {
+		return len(s), nil
+	}
+}
+
+// use it:
+
+var mrs MyReader string
+var mrb MyReader []byte
+
+s := "Golang"
+bs := make([]byte, 100)
+
+var rs Reader string = mrs
+_, _ = rs.Read(s)
+var rb Reader []byte = mrb
+_, _ = rb.Read(bs)
+
+rb = (MyReader string)(rs)
+_, _ = rb.Read(bs)
+rs = (MyReader []byte)(rb)
+_, _ = rs.Read(s)
+```
