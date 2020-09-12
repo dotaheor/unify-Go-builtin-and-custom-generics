@@ -20,6 +20,8 @@ The `( ... // assure lines )` part is optional. It doesn't need to present if no
 The `{... // Go 1 code }` can also be omitted, in which case the `( ... // assure lines )` part must present.
 For such a case, a named contract/constaint is defined.
 
+_(Another syntax choice is exchanging the `[]` and `()` uses: `package GenName(Types)[AssureLines]{Go1Code}`)_
+
 In other words, a custom generic are declared as mini-package in a single source file. 
 
 The declaration form differs to the main proposal in several points:
