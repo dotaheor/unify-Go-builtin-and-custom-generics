@@ -377,7 +377,7 @@ package Reader[T] (
 }
 
 package MyReader[T](
-	assert T.kind & (String | Slice)
+	assert readonlybytes[T]
 ){
 	type MyReader struct{}
 
