@@ -388,8 +388,8 @@ package MyReader[T](
 
 // use it:
 
-var mrs MyReader string
-var mrb MyReader []byte
+var mrs *MyReader string
+var mrb *MyReader []byte
 
 s := "Golang"
 bs := make([]byte, 100)
@@ -399,8 +399,8 @@ _, _ = rs.Read(s)
 var rb Reader []byte = mrb
 _, _ = rb.Read(bs)
 
-rb = (MyReader string)(rs)
-_, _ = rb.Read(bs)
-rs = (MyReader []byte)(rb)
+rs = (*MyReader string)(rb)
 _, _ = rs.Read(s)
+rb = (*MyReader []byte)(rs)
+_, _ = rb.Read(bs)
 ```
