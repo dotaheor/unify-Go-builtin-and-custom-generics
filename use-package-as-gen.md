@@ -366,6 +366,7 @@ package Min[T](
 ```
 package readonlybytes[T] (
 	assert T.kind & (String | Slice)
+	assert T.value[0].kind == Byte
 )
 
 package Reader[T] (
