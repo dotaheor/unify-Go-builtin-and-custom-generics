@@ -383,6 +383,7 @@ package MyReader[T](
 	type MyReader struct{}
 
 	type (r *MyReader) Read(s T)(int, error) {
+		... // element of s will not be modified.
 		return len(s), nil
 	}
 }
@@ -392,16 +393,14 @@ package MyReader[T](
 var mrs *MyReader string
 var mrb *MyReader []byte
 
-s := "Golang"
-bs := make([]byte, 100)
+var s = "Golang"
+var bs = make([]byte, 100)
 
-var rs Reader string = mrs
-_, _ = rs.Read(s)
-var rb Reader []byte = mrb
-_, _ = rb.Read(bs)
+var rs = MyReader string{} // underlying is struct{}
+var rb = MyReader []byte{} // underlying is struct{}
 
-rs = (*MyReader string)(rb)
-_, _ = rs.Read(s)
-rb = (*MyReader []byte)(rs)
-_, _ = rb.Read(bs)
+var strReader Reader string = &rs
+_, _ = strReader.Read(s)
+var bsReader Reader []byte = &rb
+_, _ = bsReader.Read(bs)
 ```
