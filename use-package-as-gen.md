@@ -404,3 +404,9 @@ _, _ = strReader.Read(s)
 var bsReader Reader []byte = &rb
 _, _ = bsReader.Read(bs)
 ```
+
+```
+// More:
+// * how to get a type which change all []byte fields to []string.
+// * ...
+```
