@@ -15,6 +15,9 @@ Personally, I think this design combines the advantages of the contract draft v1
 * `T.kind`, means the kind of the type represented by `T`.
 * `T.value`, means an unspecified (addressable) value of the type represented by `T`.
 * `T.name`, means the name of the type represented by `T`. `""` for unnamed types.
+* `T.zero`, means the zero value of this type.
+* `T.min`, means the minimum value of this type.
+* `T.max`, means the maximum value of this type.
 * `T.signed`: whether or not the type represetned by `T` is a signed numeric type.
    (Not a very elementary property.
    There must be an aforementioned contract constrainting `T` to represent
